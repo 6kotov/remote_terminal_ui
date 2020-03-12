@@ -52,3 +52,89 @@ body {
 .loginButton {
   margin-top: 2rem;
  }
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  width: 40vw;
+  height: 1rem;
+  padding: 0.5rem;
+  padding-bottom:0.7rem ;
+  margin:0.2rem;
+  border: teal solid 1px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.connectionAdd {
+  margin-left: 7vw;
+}
+
+.rm {
+  background-color:rgba(221, 98, 98, 0.5);
+  font-size: 1rem;
+  padding-bottom:1rem ;
+  border-radius:0.3rem;
+}
+
+
+
+
+
+ .lds-ellipsis {
+  display: inline-block;
+  position: absolute;
+  top:40vh;
+  left:40vw;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background:springgreen;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}

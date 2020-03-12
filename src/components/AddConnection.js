@@ -44,7 +44,7 @@ function AddConnection({ addConnect }) {
 
   return (
     <div>
-      <button onClick={() => setShown(true)}>Add Profile</button>
+      <button className="connectionAdd" onClick={() => setShown(true)}>Add Profile</button>
       {shown && (
         <div className="modal">
           <form onSubmit={submitHandle} className="modal-body">
