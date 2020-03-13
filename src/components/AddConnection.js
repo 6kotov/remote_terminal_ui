@@ -52,16 +52,16 @@ function AddConnection({ addConnect }) {
               &times;
             </button>
             <h3>Add new connection</h3>
-            <label for="name">Connection name</label>
+            <label>Connection name</label>
             <input name="name" value={name} onChange={handleInput} required />
-            <label for="ip">IP</label>
+            <label >IP</label>
             <input name="ip" value={ip} onChange={handleInput} required />
-            <label for="port">PORT</label>
+            <label >PORT</label>
             <input name="port" value={port} onChange={handleInput} required />
-            <label for="username">Username</label>
+            <label >Username</label>
             <input name="username" value={username} onChange={handleInput} required />
-            <label for="password">Password</label>
-            <input name="password" value={password} onChange={handleInput} required />
+            <label >Password</label>
+            <textarea name="password" rows='3' value={password} onChange={handleInput} required />
             <button className="loginButton" type="submit">
               Add
             </button>

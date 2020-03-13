@@ -8,7 +8,7 @@ function ConnectionsList (prop) {
 
 
     return(
-        <ul>
+        <ul className='list'>
            {prop.connections.map((connection, index) => {
                return (
               <ConnectionItem index={index} item={connection} key={index} />
