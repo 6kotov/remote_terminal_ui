@@ -8,24 +8,24 @@ import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 function App() {
-  const [islogged, setLogin] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [islogged, setLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
   const secret = process.env.REACT_APP_SECRET;
 
-  useEffect(() => {
-    window.addEventListener("storage", () => {
-      setConnection(JSON.parse(localStorage.getItem("connections")));
-    });
+  // useEffect(() => {
+  //   window.addEventListener("storage", () => {
+  //     setConnection(JSON.parse(localStorage.getItem("connections")));
+  //   });
 
-    fetch("https://swapi.co/api/people/30")
-      .then(response => response.json())
-      .then(isMale => {
-        if (isMale.gender === "male") {
-          setLogin(true);
-        }
-        setLoading(false);
-      });
-  }, []);
+  //   fetch("https://swapi.co/api/people/30")
+  //     .then(response => response.json())
+  //     .then(isMale => {
+  //       if (isMale.gender === "male") {
+  //         setLogin(true);
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   useEffect(() => {
     localStorage.setItem("connections", JSON.stringify(connections));

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { AddCircleOIcon } from '@patternfly/react-icons'
-import { CloseIcon } from '@patternfly/react-icons'
-import { OkIcon } from '@patternfly/react-icons'
+import { AddCircleOIcon } from "@patternfly/react-icons";
+import { CloseIcon } from "@patternfly/react-icons";
+import { OkIcon } from "@patternfly/react-icons";
 
 function AddConnection({ addConnect }) {
   const [shown, setShown] = useState(false);
@@ -11,6 +11,7 @@ function AddConnection({ addConnect }) {
   const [port, setPort] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [fileOrText, setFileOrText] = useState(true);
 
   function handleInput(event) {
     const target = event.target;
@@ -22,6 +23,7 @@ function AddConnection({ addConnect }) {
     if (name === "port") setPort(value);
     if (name === "username") setUserName(value);
     if (name === "password") setPassword(value);
+    if (name === "key") setFileOrText(!fileOrText);
   }
   function clearInput() {
     setName("");
@@ -29,6 +31,7 @@ function AddConnection({ addConnect }) {
     setPort("");
     setUserName("");
     setPassword("");
+    setFileOrText(false);
   }
 
   function submitHandle(event) {
@@ -47,26 +50,59 @@ function AddConnection({ addConnect }) {
 
   return (
     <div>
-      <button className="connectionAdd" onClick={() => setShown(true)}>Add profile <AddCircleOIcon/></button>
+      <button className="connectionAdd" onClick={() => setShown(true)}>
+        Add profile <AddCircleOIcon />
+      </button>
       {shown && (
         <div className="modal">
           <form onSubmit={submitHandle} className="modal-body">
             <button className="closeButton" onClick={() => setShown(false)}>
-             <CloseIcon/>
+              <CloseIcon />
             </button>
             <div className="modal-header">Add new connection</div>
             <label>Connection name</label>
             <input name="name" value={name} onChange={handleInput} required />
-            <label >IP</label>
+            <label>Ip or </label>
             <input name="ip" value={ip} onChange={handleInput} required />
-            <label >PORT</label>
+            <label>PORT</label>
             <input name="port" value={port} onChange={handleInput} required />
-            <label >Username</label>
-            <input name="username" value={username} onChange={handleInput} required />
-            <label >Password</label>
-            <textarea name="password" rows='3' value={password} onChange={handleInput} required />
+            <label>Username</label>
+            <input
+              name="username"
+              value={username}
+              onChange={handleInput}
+              required
+            />
+            <label>Private key</label>
+            <textarea
+              name="password"
+              rows="3"
+              value={password}
+              onChange={handleInput}
+              required
+              disabled={!fileOrText}
+            />
+            <div>
+              {" "}
+              From file{" "}
+              <input
+                value={{ fileOrText }}
+                name="key"
+                onChange={handleInput}
+                type="checkbox"
+              />{" "}
+              <input
+                name="password"
+                value={password}
+                onChange={handleInput}
+                type="file"
+                disabled={fileOrText}
+
+              />
+
+            </div>
             <button className="loginButton" type="submit">
-              Save <OkIcon/> 
+              Save <OkIcon />
             </button>
           </form>
         </div>

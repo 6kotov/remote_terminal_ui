@@ -44,7 +44,7 @@ flex-flow: column nowrap;
 
 .modal-header {
   font-weight: bold;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   text-align: center;
   height: 3.4rem;
   padding: 0.5rem;
@@ -69,7 +69,16 @@ flex-flow: column nowrap;
   font-weight: bold;
   margin-top: 1rem;
   width: 6rem;
-  align-self:center;
+  align-self: center;
+ }
+
+ .margin {
+  margin-left: 4rem;
+ }
+
+ .login {
+   align-self: center;
+   align-content: center;
  }
 
 .item {
@@ -131,13 +140,11 @@ flex-flow: column nowrap;
   overflow: hidden;
 }
 
-
-
  .lds-ellipsis {
   display: inline-block;
   position: absolute;
-  top:40vh;
-  left:40vw;
+  top:50vh;
+  left:50vw;
   width: 80px;
   height: 80px;
 }
@@ -147,7 +154,7 @@ flex-flow: column nowrap;
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background:springgreen;
+  background:#73BCF7;
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {
@@ -190,3 +197,5 @@ flex-flow: column nowrap;
     transform: translate(24px, 0);
   }
 }
+
+

@@ -1,17 +1,26 @@
 import React from "react";
+import { KeyIcon } from "@patternfly/react-icons";
+import { UserIcon } from "@patternfly/react-icons";
 
 function LoginWindow() {
-
-
   return (
     <div className="modal">
       <form className="modal-body">
-          <h2>Welcome to remote terminal</h2>
-        <label for='login'>Login</label>
-        <input name="login" />
-        <label for='pass'>Password</label>
-        <input name="pass" />
-        <button type="submit">Login</button>
+        <div className="modal-header"> Welcome to remote terminal </div>
+        <div className='login'>
+        <label for="login">Login</label>
+        <div>
+          <UserIcon />
+          <input name="login" />
+        </div>
+        <label for="pass">Password</label>
+        <div>
+          <KeyIcon /> <input name="pass" />
+        </div>
+        <button type="submit" className="loginButton margin">
+          Login
+        </button>
+        </div>
       </form>
     </div>
   );
