@@ -59,7 +59,7 @@ flex-direction: column;
   padding: 0.5rem;
   padding-bottom:0.7rem ;
   margin:0.2rem;
-  border: teal solid 1px;
+  border: teal solid 2px;
   border-radius: 0.5rem;
 }
 
@@ -72,12 +72,12 @@ flex-direction: column;
   border: teal solid 1px;
   border-radius: 0.5rem;
 }
-.name {
+/* .name {
   width: 10vw;
   overflow: hidden;
   right: 7vw;
   position: relative
-}
+} */
 .title {
   width: fit-content;
   height: 1rem;
@@ -89,15 +89,14 @@ flex-direction: column;
 }
 
 .rm {
+  margin-left: 1rem;
   background-color:rgba(221, 98, 98, 0.5);
   font-size: 1rem;
-  padding-bottom:1rem ;
   border-radius:0.3rem;
 }
 .connect {
   background-color:rgba(98, 221, 139, 0.5);
   font-size: 1rem;
-  padding-bottom:1rem ;
   border-radius:0.3rem;
 }
 
