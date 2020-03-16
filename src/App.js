@@ -66,7 +66,7 @@ function App() {
   return (
     <Context.Provider value={{ removeItem: removeItem, onConnect: onConnect }}>
       <div className="wrapper">
-        <span className="title">Connections List</span>
+        <div className="title">Connections List</div>
         {loading && <Loader />}
         {!islogged && !loading && <LoginWindow />}
         {!loading && <AddConnection addConnect={addConnect} />}

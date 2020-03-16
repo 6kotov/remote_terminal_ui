@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { AddCircleOIcon } from '@patternfly/react-icons'
+import { CloseIcon } from '@patternfly/react-icons'
+import { OkIcon } from '@patternfly/react-icons'
 
 function AddConnection({ addConnect }) {
   const [shown, setShown] = useState(false);
@@ -44,14 +47,14 @@ function AddConnection({ addConnect }) {
 
   return (
     <div>
-      <button className="connectionAdd" onClick={() => setShown(true)}>Add Profile</button>
+      <button className="connectionAdd" onClick={() => setShown(true)}>Add profile <AddCircleOIcon/></button>
       {shown && (
         <div className="modal">
           <form onSubmit={submitHandle} className="modal-body">
             <button className="closeButton" onClick={() => setShown(false)}>
-              &times;
+             <CloseIcon/>
             </button>
-            <h3>Add new connection</h3>
+            <div className="modal-header">Add new connection</div>
             <label>Connection name</label>
             <input name="name" value={name} onChange={handleInput} required />
             <label >IP</label>
@@ -63,7 +66,7 @@ function AddConnection({ addConnect }) {
             <label >Password</label>
             <textarea name="password" rows='3' value={password} onChange={handleInput} required />
             <button className="loginButton" type="submit">
-              Add
+              Save <OkIcon/> 
             </button>
           </form>
         </div>
