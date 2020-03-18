@@ -8,14 +8,19 @@ body {
 }
 
 .wrapper {
-  padding-top: 5rem;
- margin-left: 20%;
+  margin-top: 5rem;
+  margin-left: 20%;
+  padding: 1rem;
   width: 60%;
+  background-color: aliceblue;
+  border: #c3c3c3 2px solid;
+  border-radius: 5px;
 }
 
 .list {
 display: flex;
 flex-flow: column nowrap;
+padding-inline-start: 0px;
 
 }
 
@@ -92,47 +97,47 @@ flex-flow: column nowrap;
   border: #72767B solid 2px;
  
 }
+.span {
+  width: 40%;
+  overflow: hidden;
+}
+.item-buttons {
+  display: flex;
+  justify-content: flex-end;
+  width: 20%;
+}
 
+.add-connect-buttons {
+  display: flex;
+}
 
 .connectionAdd {
-  font-size: 1rem;
-  margin-left: 40px;
+  color: rgb(51, 55, 59);
+  width: 7rem;
+  height: 2rem;
   margin-top: 1rem;
-  width: fit-content;
-  padding: 0.5rem;
-  border: 
-  #72767B solid 2px;
-
+  margin-left: 0.5rem;
+  font-weight: bold;
 }
-/* .name {
-  width: 10vw;
-  overflow: hidden;
-  right: 7vw;
-  position: relative
-} */
 
 .title {
   font-weight: bold;
   font-size: 2rem;
   height: 2rem;
   padding: 0.5rem;
-  margin-left: 40px;
   padding-bottom:1.8rem ;
   border: 
   #72767B solid 1px;
   background-color:#73BCF7 ;
 }
 
-.rm {
-  color: rgb(51, 55, 59);
-  font-size: 1rem;
-  border-radius:0.3rem;
-  margin-left: 1rem;
-}
-.connect {
-  color:  rgb(51, 55, 59);
-  font-size: 1rem;
-  border-radius:0.3rem;
+.connect , .rm {
+    color: rgb(51, 55, 59);
+    border-radius: 0.3rem;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -0.3rem;
+    margin-left: 0.5rem;
 }
 
 .text {

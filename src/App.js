@@ -2,30 +2,31 @@ import React, { useState, useEffect } from "react";
 import ConnectionsList from "./components/ConnestionsList";
 import LoginWindow from "./components/LoginWindow";
 import AddConnection from "./components/AddConnection";
+import StartConnection from './components/StartConnection'
 import Loader from "./components/Loading";
 import Context from "./Context";
 import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 function App() {
-  const [islogged, setLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [islogged, setLogin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const secret = process.env.REACT_APP_SECRET;
 
-  // useEffect(() => {
-  //   window.addEventListener("storage", () => {
-  //     setConnection(JSON.parse(localStorage.getItem("connections")));
-  //   });
+  useEffect(() => {
+    window.addEventListener("storage", () => {
+      setConnection(JSON.parse(localStorage.getItem("connections")));
+    });
 
-  //   fetch("https://swapi.co/api/people/30")
-  //     .then(response => response.json())
-  //     .then(isMale => {
-  //       if (isMale.gender === "male") {
-  //         setLogin(true);
-  //       }
-  //       setLoading(false);
-  //     });
-  // }, []);
+    fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
+      .then(response => response.json())
+      .then(isMale => {
+        if (isMale) {
+          setLogin(true);
+        }
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("connections", JSON.stringify(connections));
@@ -44,12 +45,13 @@ function App() {
           name: connectInfo.name,
           id: Date.now(),
           ip: connectInfo.ip,
-          port: connectInfo.port,
+          description: connectInfo.description,
           username: connectInfo.username,
           password: CryptoJS.AES.encrypt(
             connectInfo.password,
             secret
-          ).toString()
+          ).toString(),
+          comment: connectInfo.comment
         }
       ])
     );
@@ -60,16 +62,25 @@ function App() {
   }
 
   function onConnect(connection) {
-    alert(connection.name + " connected");
+    const url =
+      "http://192.168.0.201:9001/start?user=" +
+      connection.username +
+      "&host=" +
+      connection.ip;
+    // const url = 'http://192.168.0.201:9001/start?user=alex&host=192.168.0.201'
+    fetch(url, { method: "GET"}).then(response => response.json()).then( data => window.open('http://192.168.0.201:7002/ssh/' + data.connect.slice(25), "_blank"));
+
   }
 
   return (
     <Context.Provider value={{ removeItem: removeItem, onConnect: onConnect }}>
       <div className="wrapper">
-        <div className="title">Connections List</div>
+        <div className="title">Connections</div>
         {loading && <Loader />}
+        
         {!islogged && !loading && <LoginWindow />}
-        {!loading && <AddConnection addConnect={addConnect} />}
+        {!loading && <div className='add-connect-buttons' ><AddConnection addConnect={addConnect} /> <StartConnection /></div> }
+        
         {connections.lenght !== 0 && !loading ? (
           <ConnectionsList connections={connections} />
         ) : (

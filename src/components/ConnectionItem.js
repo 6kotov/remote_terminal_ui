@@ -9,9 +9,9 @@ function ConectionItem ({item, index}) {
 
     return(
     <div className="item">
-        <div >name:{item.name}</div>
-        <div>IP:{item.ip}</div>
-        <div>
+        <div className='span' >Name: {item.name}</div>
+        <div className='span'>Hostname {item.ip}</div>
+        <div className='item-buttons '>
     <button className='connect' onClick={onConnect.bind(null,item)}><ArrowIcon/></button>
         <button className='rm' onClick={removeItem.bind(null,item.id)}><Remove2Icon/></button>
         </div>
