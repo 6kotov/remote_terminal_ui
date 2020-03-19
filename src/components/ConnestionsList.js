@@ -5,8 +5,7 @@ import ConnectionItem from './ConnectionItem'
 
 
 function ConnectionsList (prop) {
-
-
+    
     return(
         <ul className='list'>
            {prop.connections.map((connection, index) => {
