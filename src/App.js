@@ -7,16 +7,16 @@ import Context from "./Context";
 import CryptoJS from "crypto-js";
 require("dotenv").config();
 
- function App() {
+function App() {
   const [islogged, setLogin] = useState(false);
   const [loading, setLoading] = useState(true);
   const secret = process.env.REACT_APP_SECRET;
 
- async function serverConnection () {
-   const response = await fetch('https://mdn.github.io/fetch-examples/fetch-json/products.json');
-   const data = await response.json();
-   return setconnectionsServer(data.products); 
- }  
+  async function serverConnection() {
+    const response = await fetch("http://192.168.0.201:9001/register");
+    const data = await response.json();
+    return setconnectionsServer(data.connections);
+  }
   useEffect(() => {
     window.addEventListener("storage", () => {
       setConnectionClient(JSON.parse(localStorage.getItem("connections")));
@@ -30,8 +30,7 @@ require("dotenv").config();
         }
         setLoading(false);
       });
-      serverConnection ()
-
+    serverConnection();
   }, []);
 
   useEffect(() => {
@@ -42,10 +41,8 @@ require("dotenv").config();
     ? JSON.parse(localStorage.getItem("connections"))
     : [];
 
-
   const [connectionsClient, setConnectionClient] = useState(storageConnections);
   const [connectionsServer, setconnectionsServer] = useState([]);
-
 
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
@@ -54,25 +51,26 @@ require("dotenv").config();
       ip: connectInfo.ip,
       description: connectInfo.description,
       username: connectInfo.username,
-      password: CryptoJS.AES.encrypt(
-        connectInfo.password,
-        secret
-      ).toString(),
+      password: CryptoJS.AES.encrypt(connectInfo.password, secret).toString(),
       comment: connectInfo.comment
-    }
+    };
     if (connectionType === "saveOnPc") {
-      setConnectionClient(
-        connectionsClient.concat([
-          newConnection
-        ])
-      );
+      setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
-      setconnectionsServer(
-        connectionsServer.concat([
-          newConnection
-        ])
-      )
-      fetch("http://192.168.0.201:9001/register", {method: "POST", headers: { 'Content-Type': 'application/json'}, body: JSON.stringify(connectionsServer)})
+      setconnectionsServer(connectionsServer.concat([newConnection]));
+
+      fetch("http://192.168.0.201:9001/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: "test",
+          host: "127.4.4.112",
+          username: "testName",
+          description: "testtest",
+          comment: "Test about",
+          sshkey: "ijwdvnf03dknfvle4cnui934ufh",
+          action: "store"
+        })
+      });
     }
   }
 
@@ -114,12 +112,12 @@ require("dotenv").config();
 
         {connectionsClient.lenght !== 0 && !loading ? (
           <>
-          <ConnectionsList connections={connectionsClient} />
-          <ConnectionsList connections={connectionsServer} />
+            <ConnectionsList connections={connectionsClient} />
+            <ConnectionsList connections={connectionsServer} />
           </>
         ) : (
-            !loading && <p> No saved connections!</p>
-          )}
+          !loading && <p> No saved connections!</p>
+        )}
       </div>
     </Context.Provider>
   );

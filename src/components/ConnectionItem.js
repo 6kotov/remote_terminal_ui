@@ -10,6 +10,9 @@ function ConectionItem({ item, index }) {
   return (
     <>
     {promptShow && (
+        <>
+        <div className='overlay' onClick={setPromptShow.bind(null, false)}>
+              </div>
           <div className="prompt">
               <div className="block">
                   <WarningTriangleIcon className='WarningIcon'/>
@@ -20,6 +23,7 @@ function ConectionItem({ item, index }) {
               <button  className='no' onClick={setPromptShow.bind(null, false)}>No</button>
             </span></div>
           </div>
+          </>
         )}
 
       <div className="item">
@@ -29,7 +33,7 @@ function ConectionItem({ item, index }) {
           <button className="connect" onClick={onConnect.bind(null, item)}>
             <ArrowIcon />
           </button>
-          <button className="rm" onClick={() => setPromptShow(true)}>
+          <button className="rm" onClick={setPromptShow.bind(null, true)}>
             <Remove2Icon />
           </button>
         </div>
