@@ -135,7 +135,6 @@ function StartConnection({ addConnect, onConnect }) {
                 name="useKey"
                 value={{ useKey }}
                 onChange={handleInput}
-                disabled={connectionType === "notSave"}
               />
               Use private key
             </label>
@@ -145,7 +144,7 @@ function StartConnection({ addConnect, onConnect }) {
               rows="3"
               value={KeyText}
               onChange={handleInput}
-              disabled={useKey || !fileOrText || connectionType === "notSave"}
+              disabled={useKey || !fileOrText}
             />
             <div>
               {" "}
@@ -155,14 +154,14 @@ function StartConnection({ addConnect, onConnect }) {
                 name="key"
                 onChange={handleInput}
                 type="checkbox"
-                disabled={useKey || connectionType === "notSave"}
+                disabled={useKey}
               />{" "}
               <input
                 name="KeyFile"
                 value={KeyFile}
                 onChange={handleInput}
                 type="file"
-                disabled={useKey || fileOrText || connectionType === "notSave"}
+                disabled={useKey || fileOrText}
               />
             </div>
             <button className="loginButton connectionAdd" type="submit">

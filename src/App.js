@@ -12,15 +12,15 @@ require("dotenv").config();
   const [loading, setLoading] = useState(true);
   const secret = process.env.REACT_APP_SECRET;
 
- function serverConnection () {
-   return  fetch('https://mdn.github.io/fetch-examples/fetch-json/products.json').then(response => response.json()).then((data) => setconnectionsServer(data.products)) 
+ async function serverConnection () {
+   const response = await fetch('https://mdn.github.io/fetch-examples/fetch-json/products.json');
+   const data = await response.json();
+   return setconnectionsServer(data.products); 
  }  
   useEffect(() => {
     window.addEventListener("storage", () => {
       setConnectionClient(JSON.parse(localStorage.getItem("connections")));
     });
-
-    serverConnection()
 
     fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
       .then(response => response.json())
@@ -30,6 +30,7 @@ require("dotenv").config();
         }
         setLoading(false);
       });
+      serverConnection ()
 
   }, []);
 
@@ -45,8 +46,6 @@ require("dotenv").config();
   const [connectionsClient, setConnectionClient] = useState(storageConnections);
   const [connectionsServer, setconnectionsServer] = useState([]);
 
-  console.log(connectionsServer)
-  console.log(connectionsClient)
 
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
