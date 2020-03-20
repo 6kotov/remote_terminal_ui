@@ -12,7 +12,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const secret = process.env.REACT_APP_SECRET;
 
-  async function serverConnection() {
+  async function getConnectionList() {
     const response = await fetch("http://192.168.0.201:9001/register");
     const data = await response.json();
     return setconnectionsServer(data.connections);
@@ -22,15 +22,17 @@ function App() {
       setConnectionClient(JSON.parse(localStorage.getItem("connections")));
     });
 
-    fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
-      .then(response => response.json())
-      .then(isMale => {
-        if (isMale) {
-          setLogin(true);
-        }
-        setLoading(false);
-      });
-    serverConnection();
+    // fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
+    //   .then(response => response.json())
+    //   .then(isMale => {
+    //     if (isMale) {
+    //       setLogin(true);
+    //     }
+    //     setLoading(false);
+    //   });
+    setLoading(false);
+    setLogin(true);
+    getConnectionList();
   }, []);
 
   useEffect(() => {
@@ -47,54 +49,74 @@ function App() {
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
       name: connectInfo.name,
-      id: Date.now(),
-      ip: connectInfo.ip,
-      description: connectInfo.description,
+      host: connectInfo.ip,
       username: connectInfo.username,
-      password: CryptoJS.AES.encrypt(connectInfo.password, secret).toString(),
-      comment: connectInfo.comment
+      description: connectInfo.description,
+      comment: connectInfo.comment,
+      sshkey: connectInfo.password,
+      action: "store"
     };
+
+    // {
+    //   name: connectInfo.name,
+    //   id: Date.now(),
+    //   ip: connectInfo.ip,
+    //   description: connectInfo.description,
+    //   username: connectInfo.username,
+    //   password: CryptoJS.AES.encrypt(connectInfo.password, secret).toString(),
+    //   comment: connectInfo.comment
+    // };
+
     if (connectionType === "saveOnPc") {
+      newConnection.uuid = Date.now();
       setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
-      setconnectionsServer(connectionsServer.concat([newConnection]));
-
       fetch("http://192.168.0.201:9001/register", {
         method: "POST",
-        body: JSON.stringify({
-          name: "test",
-          host: "127.4.4.112",
-          username: "testName",
-          description: "testtest",
-          comment: "Test about",
-          sshkey: "ijwdvnf03dknfvle4cnui934ufh",
-          action: "store"
-        })
+        body: JSON.stringify(
+          newConnection
+        )
       });
+
+      getConnectionList();
     }
   }
 
-  function removeItem(id) {
+  function removeItem(uuid) {
     setConnectionClient(
-      connectionsClient.filter(connection => connection.id !== id)
+      connectionsClient.filter(connection => connection.uuid !== uuid)
     );
+
+    fetch("http://192.168.0.201:9001/register", {
+      method: "POST",
+      body: JSON.stringify({
+        action: "remove",
+        uuid:uuid
+      })
+    });
+
+    getConnectionList();
   }
 
   function onConnect(connection) {
     const url =
-      "http://192.168.0.201:9001/start?user=" +
-      connection.username +
-      "&host=" +
-      connection.ip;
+      "http://192.168.0.201:9001/register"
+
     // const url = 'http://192.168.0.201:9001/start?user=alex&host=192.168.0.201'
-    fetch(url, { method: "GET" })
-      .then(response => response.json())
-      .then(data =>
-        window.open(
-          "http://192.168.0.201:7002/ssh/" + data.connect.slice(25),
-          "_blank"
-        )
-      );
+
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "connect",
+        uuid:connection.uuid
+      })
+    }).then(response => response.json())
+    // .then(data =>
+    //   // window.open(
+    //   //   "http://192.168.0.201:7002/ssh/" + data.connect.slice(25),
+    //   //   "_blank"
+    //   // )
+    // );
   }
 
   return (
@@ -112,6 +134,10 @@ function App() {
 
         {connectionsClient.lenght !== 0 && !loading ? (
           <>
+            <div className="listTilte">
+              <div className="span">Name</div> <div className="span">Host</div>
+              <div className="itemButtons"> </div>
+            </div>
             <ConnectionsList connections={connectionsClient} />
             <ConnectionsList connections={connectionsServer} />
           </>

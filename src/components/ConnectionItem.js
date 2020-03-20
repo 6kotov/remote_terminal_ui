@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Context from "../Context";
 import { ArrowIcon ,Remove2Icon ,  WarningTriangleIcon} from "@patternfly/react-icons";
 
-function ConectionItem({ item, index }) {
+function ConectionItem({ item }) {
   const { removeItem, onConnect } = useContext(Context);
   const [promptShow, setPromptShow] = useState(false);
 
@@ -19,7 +19,7 @@ function ConectionItem({ item, index }) {
                   </div>
                   <div className='prompt_block'>Delete connection?
             <span>
-              <button className='yes' onClick={removeItem.bind(null, item.id)}>Yes</button>
+              <button className='yes' onClick={removeItem.bind(null, item.uuid)}>Yes</button>
               <button  className='no' onClick={setPromptShow.bind(null, false)}>No</button>
             </span></div>
           </div>
@@ -27,9 +27,9 @@ function ConectionItem({ item, index }) {
         )}
 
       <div className="item">
-        <div className="span">Name: {item.name}</div>
-        <div className="span">Hostname {item.ip}</div>
-        <div className="item-buttons ">
+        <div className="span"> {item.username}</div>
+        <div className="span">{item.host}</div>
+        <div className="itemButtons">
           <button className="connect" onClick={onConnect.bind(null, item)}>
             <ArrowIcon />
           </button>
