@@ -7,6 +7,11 @@ function ConectionItem({ item }) {
   const { removeItem, onConnect } = useContext(Context);
   const [promptShow, setPromptShow] = useState(false);
 
+  function deleteConnection (uuid) {
+    removeItem(item.uuid)
+    setPromptShow(false)
+  };
+
   return (
     <>
     {promptShow && (
@@ -19,7 +24,7 @@ function ConectionItem({ item }) {
                   </div>
                   <div className='prompt_block'>Delete connection?
             <span>
-              <button className='yes' onClick={removeItem.bind(null, item.uuid)}>Yes</button>
+              <button className='yes' onClick={deleteConnection.bind(null, item.uuid)}>Yes</button>
               <button  className='no' onClick={setPromptShow.bind(null, false)}>No</button>
             </span></div>
           </div>

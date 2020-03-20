@@ -52,7 +52,7 @@ function StartConnection({ addConnect, onConnect }) {
 
     const connection = {
       name: connectionName,
-      ip: ip,
+      host: ip,
       description: description,
       username: username,
       password: privatKey,

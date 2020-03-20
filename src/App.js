@@ -14,7 +14,7 @@ function App() {
 
   async function getConnectionList() {
     const response = await fetch("http://192.168.0.201:9001/register");
-    const data = await response.json();
+    const data = await response.json().catch(e => alert('Unable to get connections list from server: ' + e));
     return setconnectionsServer(data.connections);
   }
   useEffect(() => {
@@ -49,24 +49,14 @@ function App() {
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
       name: connectInfo.name,
-      host: connectInfo.ip,
+      host: connectInfo.host,
       username: connectInfo.username,
       description: connectInfo.description,
       comment: connectInfo.comment,
       sshkey: connectInfo.password,
       action: "store"
     };
-
-    // {
-    //   name: connectInfo.name,
-    //   id: Date.now(),
-    //   ip: connectInfo.ip,
-    //   description: connectInfo.description,
-    //   username: connectInfo.username,
-    //   password: CryptoJS.AES.encrypt(connectInfo.password, secret).toString(),
-    //   comment: connectInfo.comment
-    // };
-
+    
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
       setConnectionClient(connectionsClient.concat([newConnection]));
@@ -76,7 +66,7 @@ function App() {
         body: JSON.stringify(
           newConnection
         )
-      });
+      }).catch(e => alert('Unable to save connections settings: ' + e));
 
       getConnectionList();
     }
@@ -86,8 +76,10 @@ function App() {
     setConnectionClient(
       connectionsClient.filter(connection => connection.uuid !== uuid)
     );
+    const url =
+    "http://192.168.0.201:9001/register"
 
-    fetch("http://192.168.0.201:9001/register", {
+    fetch(url, {
       method: "POST",
       body: JSON.stringify({
         action: "remove",
@@ -102,21 +94,22 @@ function App() {
     const url =
       "http://192.168.0.201:9001/register"
 
-    // const url = 'http://192.168.0.201:9001/start?user=alex&host=192.168.0.201'
-
     fetch(url, {
       method: "POST",
       body: JSON.stringify({
+        host: connection.host,
+        username: connection.username,
         action: "connect",
-        uuid:connection.uuid
       })
     }).then(response => response.json())
-    // .then(data =>
-    //   // window.open(
-    //   //   "http://192.168.0.201:7002/ssh/" + data.connect.slice(25),
-    //   //   "_blank"
-    //   // )
-    // );
+    .then(data =>
+      window.open(
+        "http://192.168.0.201:7002/ssh/" + data.connect.slice(25),
+        "_blank"
+      )
+    )
+    .catch(e => alert('Unable to connect server: ' + e));
+    
   }
 
   return (
