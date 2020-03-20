@@ -32,6 +32,7 @@ function ConectionItem({ item }) {
         )}
 
       <div className="item">
+      <div className="span"> {item.name}</div>
         <div className="span"> {item.username}</div>
         <div className="span">{item.host}</div>
         <div className="itemButtons">

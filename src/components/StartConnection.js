@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { ArrowIcon } from '@patternfly/react-icons'
+import { ArrowIcon } from "@patternfly/react-icons";
 import { CloseIcon } from "@patternfly/react-icons";
 import { OkIcon } from "@patternfly/react-icons";
 
@@ -43,7 +43,7 @@ function StartConnection({ addConnect, onConnect }) {
     setFileOrText(false);
     setComment("");
     setUseKey(false);
-    setconnectionType("notSave")
+    setconnectionType("notSave");
   }
 
   function submitHandle(event) {
@@ -60,7 +60,9 @@ function StartConnection({ addConnect, onConnect }) {
     };
     event.preventDefault();
     onConnect(connection);
-    if (connectionType !== "notSave") { addConnect(connection, connectionType); }
+    if (connectionType !== "notSave") {
+      addConnect(connection, connectionType);
+    }
     clearInput();
     setShown(false);
   }
@@ -86,7 +88,7 @@ function StartConnection({ addConnect, onConnect }) {
               onChange={handleInput}
               required
             />
-            <label className='button_group'>
+            <label className="button_group">
               <input
                 type="radio"
                 value={connectionType}
@@ -111,16 +113,21 @@ function StartConnection({ addConnect, onConnect }) {
               Save on my computer
             </label>
             <label>Connection name</label>
-            <input name="name" value={name} onChange={handleInput} disabled={connectionType === "notSave"} />
-            <label>Description</label>
             <input
+              name="name"
+              value={name}
+              onChange={handleInput}
+              disabled={connectionType === "notSave"}
+            />
+            <label>Description</label>
+            <textarea
               name="description"
               value={description}
               onChange={handleInput}
               disabled={connectionType === "notSave"}
             />
             <label>Comment</label>
-            <textarea
+            <input
               name="comment"
               rows="1"
               value={comment}
@@ -136,19 +143,7 @@ function StartConnection({ addConnect, onConnect }) {
                 value={{ useKey }}
                 onChange={handleInput}
               />
-              Use private key
-            </label>
-
-            <textarea
-              name="KeyText"
-              rows="3"
-              value={KeyText}
-              onChange={handleInput}
-              disabled={useKey || !fileOrText}
-            />
-            <div>
-              {" "}
-              From file{" "}
+              Use private key{" "}
               <input
                 value={{ fileOrText }}
                 name="key"
@@ -156,6 +151,20 @@ function StartConnection({ addConnect, onConnect }) {
                 type="checkbox"
                 disabled={useKey}
               />{" "}
+              From file
+            </label>
+
+            {fileOrText && (
+              <textarea
+                name="KeyText"
+                rows="3"
+                value={KeyText}
+                onChange={handleInput}
+                disabled={useKey || !fileOrText}
+              />
+            )}
+
+            {!fileOrText && (
               <input
                 name="KeyFile"
                 value={KeyFile}
@@ -163,9 +172,10 @@ function StartConnection({ addConnect, onConnect }) {
                 type="file"
                 disabled={useKey || fileOrText}
               />
-            </div>
+            )}
+
             <button className="loginButton connectionAdd" type="submit">
-             Connect <OkIcon />
+              Connect <OkIcon />
             </button>
           </form>
         </div>

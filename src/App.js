@@ -8,14 +8,28 @@ import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 function App() {
+
+  const storageConnections = JSON.parse(localStorage.getItem("connections"))
+    ? JSON.parse(localStorage.getItem("connections"))
+    : [];
   const [islogged, setLogin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [connectionsClient, setConnectionClient] = useState(storageConnections);
+  const [connectionsServer, setconnectionsServer] = useState([]);
+  const [message, setMessage] = useState('')
+
   const secret = process.env.REACT_APP_SECRET;
 
+  function status (text) {
+    setMessage(text)
+  }
+
   async function getConnectionList() {
+    status('Getting connection list')
     const response = await fetch("http://192.168.0.201:9001/register");
-    const data = await response.json().catch(e => alert('Unable to get connections list from server: ' + e));
+    const data = await response.json().catch(e => status('Unable to get connections list from server: ' + e));
     return setconnectionsServer(data.connections);
+   
   }
   useEffect(() => {
     window.addEventListener("storage", () => {
@@ -32,19 +46,13 @@ function App() {
     //   });
     setLoading(false);
     setLogin(true);
-    getConnectionList();
+    getConnectionList()
   }, []);
+
 
   useEffect(() => {
     localStorage.setItem("connections", JSON.stringify(connectionsClient));
   });
-
-  let storageConnections = JSON.parse(localStorage.getItem("connections"))
-    ? JSON.parse(localStorage.getItem("connections"))
-    : [];
-
-  const [connectionsClient, setConnectionClient] = useState(storageConnections);
-  const [connectionsServer, setconnectionsServer] = useState([]);
 
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
@@ -56,7 +64,7 @@ function App() {
       sshkey: connectInfo.password,
       action: "store"
     };
-    
+
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
       setConnectionClient(connectionsClient.concat([newConnection]));
@@ -66,7 +74,7 @@ function App() {
         body: JSON.stringify(
           newConnection
         )
-      }).catch(e => alert('Unable to save connections settings: ' + e));
+      }).catch(e =>status('Unable to get connections list from server: ' + e));
 
       getConnectionList();
     }
@@ -93,6 +101,7 @@ function App() {
   function onConnect(connection) {
     const url =
       "http://192.168.0.201:9001/register"
+      status('Connecting to server...')
 
     fetch(url, {
       method: "POST",
@@ -108,7 +117,7 @@ function App() {
         "_blank"
       )
     )
-    .catch(e => alert('Unable to connect server: ' + e));
+    .catch(e => status('Unable to get connections list from server: ' + e));
     
   }
 
@@ -121,16 +130,12 @@ function App() {
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
           <div className="add-connect-buttons">
-            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "}
+            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "} <div>{message}</div>
           </div>
         )}
 
         {connectionsClient.lenght !== 0 && !loading ? (
           <>
-            <div className="listTilte">
-              <div className="span">Name</div> <div className="span">Host</div>
-              <div className="itemButtons"> </div>
-            </div>
             <ConnectionsList connections={connectionsClient} />
             <ConnectionsList connections={connectionsServer} />
           </>
