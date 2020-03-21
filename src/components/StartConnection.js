@@ -21,16 +21,24 @@ function StartConnection({ addConnect, onConnect }) {
     const target = event.target;
     const value = event.target.value;
     const name = target.name;
+    const reader = new FileReader()
 
     if (name === "name") setName(value);
     if (name === "ip") setIp(value);
     if (name === "description") setDescription(value);
     if (name === "username") setUserName(value);
     if (name === "KeyText") setKeyText(value);
-    if (name === "KeyFile") setKeyFile(value);
     if (name === "key") setFileOrText(!fileOrText);
     if (name === "comment") setComment(value);
     if (name === "useKey") setUseKey(!useKey);
+    if (name === "KeyFile") {
+      const file = target.files[0];
+      if (file.size < 10000) {reader.readAsText(file)
+        reader.onload = function() {
+          setKeyFile(reader.result)
+        };
+      }
+    } 
   }
 
   function clearInput() {
@@ -39,25 +47,26 @@ function StartConnection({ addConnect, onConnect }) {
     setDescription("");
     setUserName("");
     setKeyText("");
-    setKeyFile("");
-    setFileOrText(false);
+    setFileOrText(!fileOrText);
+    setKeyFile("")
     setComment("");
-    setUseKey(false);
+    setUseKey(!useKey);
     setconnectionType("notSave");
   }
 
   function submitHandle(event) {
-    const privatKey = fileOrText ? KeyText : KeyFile,
-      connectionName = name ? name : username + "@" + ip;
+    const connectionName = name ? name : username + "@" + ip,
+    privatKey = fileOrText ? KeyText : KeyFile ;
 
     const connection = {
       name: connectionName,
       host: ip,
       description: description,
       username: username,
-      password: privatKey,
+      password:privatKey ,
       comment: comment
     };
+    console.log(connection)
     event.preventDefault();
     onConnect(connection);
     if (connectionType !== "notSave") {
@@ -88,30 +97,31 @@ function StartConnection({ addConnect, onConnect }) {
               onChange={handleInput}
               required
             />
-            <label className="button_group">
-              <input
+            <div className="button_group">
+              <label><input
                 type="radio"
                 value={connectionType}
                 onChange={setconnectionType.bind(null, "notSave")}
                 name="needSave"
                 checked={connectionType === "notSave"}
               />
-              Connect without saving{" "}
-              <input
+              Connect without saving{" "}</label>
+              <label><input
                 type="radio"
                 value={connectionType}
                 onChange={setconnectionType.bind(null, "saveOnServer")}
                 name="needSave"
               />{" "}
-              Save on server{" "}
-              <input
+              Save on server{" "}</label>
+              <label><input
                 type="radio"
                 value={connectionType}
                 onChange={setconnectionType.bind(null, "saveOnPc")}
                 name="needSave"
               />{" "}
-              Save on my computer
-            </label>
+              Save on my computer</label>
+              
+            </div>
             <label>Connection name</label>
             <input
               name="name"
@@ -135,24 +145,23 @@ function StartConnection({ addConnect, onConnect }) {
               disabled={connectionType === "notSave"}
             />
 
-            <label>
-              {" "}
-              <input
+            <div>
+              <label><input
                 type="checkbox"
                 name="useKey"
                 value={{ useKey }}
                 onChange={handleInput}
               />
-              Use private key{" "}
-              <input
+              Use private key{" "}</label>
+              <label> <input
                 value={{ fileOrText }}
                 name="key"
                 onChange={handleInput}
                 type="checkbox"
                 disabled={useKey}
               />{" "}
-              From file
-            </label>
+              From file</label>
+            </div>
 
             {fileOrText && (
               <textarea
@@ -160,17 +169,16 @@ function StartConnection({ addConnect, onConnect }) {
                 rows="3"
                 value={KeyText}
                 onChange={handleInput}
-                disabled={useKey || !fileOrText}
+                disabled={useKey}
               />
             )}
 
             {!fileOrText && (
               <input
                 name="KeyFile"
-                value={KeyFile}
                 onChange={handleInput}
                 type="file"
-                disabled={useKey || fileOrText}
+                disabled={useKey}
               />
             )}
 

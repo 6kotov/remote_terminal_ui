@@ -18,7 +18,7 @@ button {
 }
 
 .wrapper {
-  margin-top: 5rem;
+  margin-top: 3rem;
   margin-left: 20%;
   padding: 1rem;
   width: 60%;
@@ -71,6 +71,22 @@ button {
   background: white;
   height: fit-content;
   z-index: 20;
+}
+
+.message {
+  color: rgb(51, 55, 59);
+  height: 2rem;
+  margin-top: 1.3rem;
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
+.messageBlue { 
+  color: rgb(109, 109, 224);
+}
+
+.messageRed{ 
+  color: rgb(206, 55, 55);
 }
 
 .modal-header {
@@ -165,15 +181,16 @@ button {
   top: 40%;
   left: 20%;
   display: flex;
+  font-size: 1.2rem;
   flex-direction: row;
   justify-content: space-between;
-  width:40%;
+  width: 30rem;
   background: white;
-  height: fit-content;
+  height: -moz-fit-content;
+  height: 5rem;
   filter: drop-shadow(0px 0px 12px rgba(0, 0, 0, 0.44));
   z-index: 30;
 }
-
 
 .prompt_block {
   display:flex;

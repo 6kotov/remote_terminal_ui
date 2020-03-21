@@ -17,17 +17,21 @@ function App() {
   const [connectionsClient, setConnectionClient] = useState(storageConnections);
   const [connectionsServer, setconnectionsServer] = useState([]);
   const [message, setMessage] = useState('')
+  const [messageclasses, setMessageclasses] = useState(['message', 'messageBlue'])
 
   const secret = process.env.REACT_APP_SECRET;
 
-  function status (text) {
+  function status (text, color, timer) {
+    color === 'red' ? setMessageclasses( ['message', 'messageRed']) : setMessageclasses( ['message', 'messageBlue']);
     setMessage(text)
+    if (timer) {
+setTimeout(()=>{setMessage('')}, 2000)
+    }
   }
 
   async function getConnectionList() {
-    status('Getting connection list')
     const response = await fetch("http://192.168.0.201:9001/register");
-    const data = await response.json().catch(e => status('Unable to get connections list from server: ' + e));
+    const data = await response.json().catch(()=>status('Unable to connect server!', 'red', false));
     return setconnectionsServer(data.connections);
    
   }
@@ -35,6 +39,8 @@ function App() {
     window.addEventListener("storage", () => {
       setConnectionClient(JSON.parse(localStorage.getItem("connections")));
     });
+    status('Getting connection list...', 'blue', true)
+
 
     // fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
     //   .then(response => response.json())
@@ -46,7 +52,8 @@ function App() {
     //   });
     setLoading(false);
     setLogin(true);
-    getConnectionList()
+    fetch("http://192.168.0.201:9001/register").then(response => response.json()).then(data=> setconnectionsServer(data.connections)).catch(()=>status('Unable to connect server!', 'red', false))
+
   }, []);
 
 
@@ -74,7 +81,7 @@ function App() {
         body: JSON.stringify(
           newConnection
         )
-      }).catch(e =>status('Unable to get connections list from server: ' + e));
+      }).catch(()=>status('Unable to connect server!', 'red', false));
 
       getConnectionList();
     }
@@ -93,15 +100,14 @@ function App() {
         action: "remove",
         uuid:uuid
       })
-    });
-
+    })
     getConnectionList();
   }
 
   function onConnect(connection) {
     const url =
       "http://192.168.0.201:9001/register"
-      status('Connecting to server...')
+      status('Connecting to server...', 'blue', true)
 
     fetch(url, {
       method: "POST",
@@ -117,7 +123,7 @@ function App() {
         "_blank"
       )
     )
-    .catch(e => status('Unable to get connections list from server: ' + e));
+    .catch(()=>status('Unable to connect server!', 'red', false));
     
   }
 
@@ -130,7 +136,7 @@ function App() {
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
           <div className="add-connect-buttons">
-            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "} <div>{message}</div>
+            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "} <span className={messageclasses.join(' ')}>{message}</span>
           </div>
         )}
 
