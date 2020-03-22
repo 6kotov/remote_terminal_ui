@@ -20,6 +20,7 @@ function App() {
   const [messageclasses, setMessageclasses] = useState(['message', 'messageBlue'])
 
   const secret = process.env.REACT_APP_SECRET;
+  const url = process.env.REACT_APP_BACKEND_URL;
 
   function status (text, color, timer) {
     color === 'red' ? setMessageclasses( ['message', 'messageRed']) : setMessageclasses( ['message', 'messageBlue']);
@@ -30,7 +31,7 @@ setTimeout(()=>{setMessage('')}, 2000)
   }
 
   async function getConnectionList() {
-    const response = await fetch("http://192.168.0.201:9001/register");
+    const response = await fetch(url);
     const data = await response.json().catch(()=>status('Unable to connect server!', 'red', false));
     return setconnectionsServer(data.connections);
    
@@ -42,16 +43,15 @@ setTimeout(()=>{setMessage('')}, 2000)
     status('Getting connection list...', 'blue', true)
 
 
-    // fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
-    //   .then(response => response.json())
-    //   .then(isMale => {
-    //     if (isMale) {
-    //       setLogin(true);
-    //     }
-    //     setLoading(false);
-    //   });
-    setLoading(false);
-    setLogin(true);
+    fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
+      .then(response => response.json())
+      .then(isMale => {
+        if (isMale) {
+          setLogin(true);
+        }
+        setLoading(false);
+      });
+    
     fetch("http://192.168.0.201:9001/register").then(response => response.json()).then(data=> setconnectionsServer(data.connections)).catch(()=>status('Unable to connect server!', 'red', false))
 
   }, []);
@@ -76,7 +76,7 @@ setTimeout(()=>{setMessage('')}, 2000)
       newConnection.uuid = Date.now();
       setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
-      fetch("http://192.168.0.201:9001/register", {
+      fetch(url, {
         method: "POST",
         body: JSON.stringify(
           newConnection
@@ -91,8 +91,6 @@ setTimeout(()=>{setMessage('')}, 2000)
     setConnectionClient(
       connectionsClient.filter(connection => connection.uuid !== uuid)
     );
-    const url =
-    "http://192.168.0.201:9001/register"
 
     fetch(url, {
       method: "POST",
@@ -105,8 +103,6 @@ setTimeout(()=>{setMessage('')}, 2000)
   }
 
   function onConnect(connection) {
-    const url =
-      "http://192.168.0.201:9001/register"
       status('Connecting to server...', 'blue', true)
 
     fetch(url, {
