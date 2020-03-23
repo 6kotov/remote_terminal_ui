@@ -68,7 +68,7 @@ setTimeout(()=>{setMessage('')}, 2000)
       username: connectInfo.username,
       description: connectInfo.description,
       comment: connectInfo.comment,
-      sshkey: connectInfo.password,
+      sshkey: connectInfo.sshkey,
       action: "store"
     };
 
@@ -111,6 +111,7 @@ setTimeout(()=>{setMessage('')}, 2000)
         host: connection.host,
         username: connection.username,
         action: "connect",
+        sshkey: connection.sshkey
       })
     }).then(response => response.json())
     .then(data =>

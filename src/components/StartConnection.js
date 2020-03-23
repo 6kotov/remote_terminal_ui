@@ -63,7 +63,7 @@ function StartConnection({ addConnect, onConnect }) {
       host: ip,
       description: description,
       username: username,
-      password:privatKey ,
+      sshkey:privatKey ,
       comment: comment
     };
     
