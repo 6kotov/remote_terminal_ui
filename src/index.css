@@ -29,7 +29,7 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
   background-color: rgb(239, 239, 239);
   border: 1px solid black;
   border-radius: 2px;
-  padding: 0.5rem;
+  padding: 0.3rem;
   text-align: center;
   margin-right:0.5rem ;
 }

@@ -4,11 +4,11 @@ import Context from "../Context";
 import { ArrowIcon ,Remove2Icon ,  WarningTriangleIcon} from "@patternfly/react-icons";
 
 function ConectionItem({ item }) {
-  const { removeItem, onConnect } = useContext(Context);
+  const { onConnect } = useContext(Context);
   const [promptShow, setPromptShow] = useState(false);
 
-  function deleteConnection (uuid) {
-    removeItem(item.uuid)
+  function deleteConnection (connection) {
+    onConnect(connection, "remove")
     setPromptShow(false)
   };
 
@@ -24,7 +24,7 @@ function ConectionItem({ item }) {
                   </div>
                   <div className='prompt_block'>Delete connection?
             <span>
-              <button className='yes' onClick={deleteConnection.bind(null, item.uuid)}>Yes</button>
+              <button className='yes' onClick={deleteConnection.bind(null, item)}>Yes</button>
               <button  className='no' onClick={setPromptShow.bind(null, false)}>No</button>
             </span></div>
           </div>

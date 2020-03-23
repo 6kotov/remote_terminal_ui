@@ -86,7 +86,7 @@ function App() {
 
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
-      newConnection.pcStorage = true
+      newConnection.pcStorage = true;
       setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
       getConnectionList();
@@ -96,9 +96,6 @@ function App() {
   function onConnect(connection, connectionType) {
     status("Connecting to server...", "blue", true);
     let reqBody = {};
-    // action: "connect",
-    //       uuid: connection.uuid
-
     if (connectionType === "notSave" || connectionType === "saveOnPc") {
       reqBody = {
         name: connection.name,
@@ -117,7 +114,7 @@ function App() {
         comment: connection.comment,
         action: "connect store"
       };
-    } else if ("shortCutConnect") {
+    } else if (connectionType === "shortCutConnect") {
       if (connection.pcStorage) {
         reqBody = {
           name: connection.name,
@@ -132,8 +129,19 @@ function App() {
           uuid: connection.uuid
         };
       }
-     
+    } else if (connectionType === "remove") {
+      if (connection.pcStorage) {
+      return setConnectionClient(
+          connectionsClient.filter(item => item.uuid !== connection.uuid)
+        );
+      } else {
+        reqBody = {
+          action: "remove",
+          uuid: connection.uuid
+        };
+      }
     }
+let re = /ssh\/.*/g
 
     fetch(url, {
       method: "POST",
@@ -141,7 +149,7 @@ function App() {
     })
       .then(response => response.json())
       .then(data => {
-        window.open(test_url + data.connect.slice(30), "_blank");
+        window.open(test_url + data.connect.match(re), "_blank");
         console.log(
           "SSH Terminal will be connected using url: [" +
             test_url +
@@ -152,25 +160,10 @@ function App() {
       .catch(() => status("Unable to connect server!", "red", false));
   }
 
-  function removeItem(uuid) {
-    setConnectionClient(
-      connectionsClient.filter(connection => connection.uuid !== uuid)
-    );
-
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "remove",
-        uuid: uuid
-      })
-    });
-    getConnectionList();
-  }
-
   return (
-    <Context.Provider value={{ removeItem: removeItem, onConnect: onConnect }}>
+    <Context.Provider value={{ onConnect: onConnect }}>
       <div className="wrapper">
-      {loading && <Loader />}
+        {loading && <Loader />}
         <div className="title"> Terminal Connections</div>
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
