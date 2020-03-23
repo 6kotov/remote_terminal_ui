@@ -8,7 +8,6 @@ import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 function App() {
-
   const storageConnections = JSON.parse(localStorage.getItem("connections"))
     ? JSON.parse(localStorage.getItem("connections"))
     : [];
@@ -16,32 +15,42 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [connectionsClient, setConnectionClient] = useState(storageConnections);
   const [connectionsServer, setconnectionsServer] = useState([]);
-  const [message, setMessage] = useState('')
-  const [messageclasses, setMessageclasses] = useState(['message', 'messageBlue'])
+  const [message, setMessage] = useState("");
+  const [messageclasses, setMessageclasses] = useState([
+    "message",
+    "messageBlue"
+  ]);
 
   const secret = process.env.REACT_APP_SECRET;
   const url = process.env.REACT_APP_BACKEND_URL;
 
-  function status (text, color, timer) {
-    color === 'red' ? setMessageclasses( ['message', 'messageRed']) : setMessageclasses( ['message', 'messageBlue']);
-    setMessage(text)
+  function status(text, color, timer) {
+    color === "red"
+      ? setMessageclasses(["message", "messageRed"])
+      : setMessageclasses(["message", "messageBlue"]);
+    setMessage(text);
     if (timer) {
-setTimeout(()=>{setMessage('')}, 2000)
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
     }
   }
 
   async function getConnectionList() {
     const response = await fetch(url);
-    const data = await response.json().catch(()=>status('Unable to connect server!', 'red', false));
+    const data = await response
+      .json()
+      .catch(() => status("Unable to connect server!", "red", false));
     return setconnectionsServer(data.connections);
-   
   }
+  
+
   useEffect(() => {
+    const url = process.env.REACT_APP_BACKEND_URL;
     window.addEventListener("storage", () => {
       setConnectionClient(JSON.parse(localStorage.getItem("connections")));
     });
-    status('Getting connection list...', 'blue', true)
-
+    status("Getting connection list...", "blue", true);
 
     fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
       .then(response => response.json())
@@ -51,11 +60,13 @@ setTimeout(()=>{setMessage('')}, 2000)
         }
         setLoading(false);
       });
-    
-    fetch("http://192.168.0.201:9001/register").then(response => response.json()).then(data=> setconnectionsServer(data.connections)).catch(()=>status('Unable to connect server!', 'red', false))
+      
 
+    fetch(url)
+      .then(response => response.json())
+      .then(data => setconnectionsServer(data.connections))
+      .catch(() => status("Unable to connect server!", "red", false));
   }, []);
-
 
   useEffect(() => {
     localStorage.setItem("connections", JSON.stringify(connectionsClient));
@@ -78,10 +89,8 @@ setTimeout(()=>{setMessage('')}, 2000)
     } else if (connectionType === "saveOnServer") {
       fetch(url, {
         method: "POST",
-        body: JSON.stringify(
-          newConnection
-        )
-      }).catch(()=>status('Unable to connect server!', 'red', false));
+        body: JSON.stringify(newConnection)
+      }).catch(() => status("Unable to connect server!", "red", false));
 
       getConnectionList();
     }
@@ -96,14 +105,15 @@ setTimeout(()=>{setMessage('')}, 2000)
       method: "POST",
       body: JSON.stringify({
         action: "remove",
-        uuid:uuid
+        uuid: uuid
       })
-    })
+    });
     getConnectionList();
   }
 
   function onConnect(connection) {
-      status('Connecting to server...', 'blue', true)
+    status("Connecting to server...", "blue", true);
+
 
     fetch(url, {
       method: "POST",
@@ -113,15 +123,15 @@ setTimeout(()=>{setMessage('')}, 2000)
         action: "connect",
         sshkey: connection.sshkey
       })
-    }).then(response => response.json())
-    .then(data =>
-      window.open(
-        "http://192.168.0.201:7002/ssh/" + data.connect.slice(25),
-        "_blank"
+    })
+      .then(response => response.json())
+      .then(data =>
+        window.open(
+          data.connect,
+          "_blank"
+        )
       )
-    )
-    .catch(()=>status('Unable to connect server!', 'red', false));
-    
+      .catch(() => status("Unable to connect server!", "red", false));
   }
 
   return (
@@ -133,17 +143,22 @@ setTimeout(()=>{setMessage('')}, 2000)
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
           <div className="add-connect-buttons">
-            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "} <span className={messageclasses.join(' ')}>{message}</span>
+            <StartConnection addConnect={addConnect} onConnect={onConnect} />{" "}
+            <span className={messageclasses.join(" ")}>{message}</span>
           </div>
         )}
 
-        {connectionsClient.lenght !== 0 && !loading ? (
+        {(connectionsClient.length !== 0 || connectionsServer.length !== 0) && !loading ? (
           <>
             <ConnectionsList connections={connectionsClient} />
             <ConnectionsList connections={connectionsServer} />
           </>
         ) : (
-          !loading && <p> No saved connections!</p>
+          !loading && (
+            <h3 className="emptyList">
+              No registered connections. Please click on "Connect" for starting.
+            </h3>
+          )
         )}
       </div>
     </Context.Provider>

@@ -12,9 +12,32 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 input , textarea {
   font-size: 1rem;
 }
+input:disabled, textarea:disabled {
+  box-shadow: inset 0px 0px 90px rgba(0, 0, 0, 0.100)
+}
+input[ type=checkbox ]:disabled {
+  box-shadow: none
+}
 
-button {
-  font-size: 1rem;
+input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
+  visibility: hidden;
+}
+
+.FileKeyLabel{
+  font-weight: 600;
+  width: 8rem;
+  background-color: rgb(239, 239, 239);
+  border: 1px solid black;
+  border-radius: 2px;
+  padding: 0.5rem;
+  text-align: center;
+  margin-right:0.5rem ;
+}
+
+
+
+.checkBoxGroup {
+  margin-bottom: 0.5rem;
 }
 
 .wrapper {
@@ -183,7 +206,6 @@ button {
   display: flex;
   font-size: 1.2rem;
   flex-direction: row;
-  justify-content: space-between;
   width: 350px;
   background: white;
   height: -moz-fit-content;
@@ -193,12 +215,10 @@ button {
 }
 
 .prompt_block {
-  display:flex;
+  display: flex;
   flex-direction: column;
-margin-bottom: 0.5rem;
-margin-right: 30%;
-align-self: flex-end;
-margin-top: 0.5rem;
+  margin-left: 20%;
+  align-self: center;
 }
 .block {
   width:3rem;
@@ -244,6 +264,16 @@ margin-top: 0.5rem;
   color: #5a1b17 ;
 
 }
+
+.fileName {
+  display: inline-flex;
+}
+
+.emptyList {
+  text-align: center;
+  margin-top: 20%;
+}
+
 .lds-ellipsis {
   display: inline-block;
   position: absolute;
