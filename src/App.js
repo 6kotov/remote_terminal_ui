@@ -21,8 +21,9 @@ function App() {
     "messageBlue"
   ]);
 
-  const secret = process.env.REACT_APP_SECRET;
-  const url = process.env.REACT_APP_BACKEND_URL;
+  const secret = process.env.REACT_APP_SECRET,
+    url = process.env.REACT_APP_BACKEND_URL,
+    test_url = process.env.REACT_APP_CONNECTION_TEST_URL;
 
   function status(text, color, timer) {
     color === "red"
@@ -43,7 +44,6 @@ function App() {
       .catch(() => status("Unable to connect server!", "red", false));
     return setconnectionsServer(data.connections);
   }
-  
 
   useEffect(() => {
     const url = process.env.REACT_APP_BACKEND_URL;
@@ -60,7 +60,6 @@ function App() {
         }
         setLoading(false);
       });
-      
 
     fetch(url)
       .then(response => response.json())
@@ -83,17 +82,74 @@ function App() {
       action: "store"
     };
 
+    onConnect(newConnection, connectionType);
+
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
+      newConnection.pcStorage = true
       setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(newConnection)
-      }).catch(() => status("Unable to connect server!", "red", false));
-
       getConnectionList();
     }
+  }
+
+  function onConnect(connection, connectionType) {
+    status("Connecting to server...", "blue", true);
+    let reqBody = {};
+    // action: "connect",
+    //       uuid: connection.uuid
+
+    if (connectionType === "notSave" || connectionType === "saveOnPc") {
+      reqBody = {
+        name: connection.name,
+        host: connection.host,
+        username: connection.username,
+        sshkey: connection.sshkey,
+        action: "connect"
+      };
+    } else if (connectionType === "saveOnServer") {
+      reqBody = {
+        name: connection.name,
+        host: connection.host,
+        username: connection.username,
+        sshkey: connection.sshkey,
+        description: connection.description,
+        comment: connection.comment,
+        action: "connect store"
+      };
+    } else if ("shortCutConnect") {
+      if (connection.pcStorage) {
+        reqBody = {
+          name: connection.name,
+          host: connection.host,
+          username: connection.username,
+          sshkey: connection.sshkey,
+          action: "connect"
+        };
+      } else {
+        reqBody = {
+          action: "connect",
+          uuid: connection.uuid
+        };
+      }
+     
+    }
+
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(reqBody)
+    })
+      .then(response => response.json())
+      .then(data => {
+        window.open(test_url + data.connect.slice(30), "_blank");
+        console.log(
+          "SSH Terminal will be connected using url: [" +
+            test_url +
+            data.connect.slice(30) +
+            "]"
+        );
+      })
+      .catch(() => status("Unable to connect server!", "red", false));
   }
 
   function removeItem(uuid) {
@@ -111,35 +167,11 @@ function App() {
     getConnectionList();
   }
 
-  function onConnect(connection) {
-    status("Connecting to server...", "blue", true);
-
-
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        host: connection.host,
-        username: connection.username,
-        action: "connect",
-        sshkey: connection.sshkey
-      })
-    })
-      .then(response => response.json())
-      .then(data =>
-        window.open(
-          data.connect,
-          "_blank"
-        )
-      )
-      .catch(() => status("Unable to connect server!", "red", false));
-  }
-
   return (
     <Context.Provider value={{ removeItem: removeItem, onConnect: onConnect }}>
       <div className="wrapper">
-        <div className="title">Connections</div>
-        {loading && <Loader />}
-
+      {loading && <Loader />}
+        <div className="title"> Terminal Connections</div>
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
           <div className="add-connect-buttons">
@@ -148,7 +180,8 @@ function App() {
           </div>
         )}
 
-        {(connectionsClient.length !== 0 || connectionsServer.length !== 0) && !loading ? (
+        {(connectionsClient.length !== 0 || connectionsServer.length !== 0) &&
+        !loading ? (
           <>
             <ConnectionsList connections={connectionsClient} />
             <ConnectionsList connections={connectionsServer} />

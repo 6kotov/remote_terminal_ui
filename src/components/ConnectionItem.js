@@ -36,7 +36,7 @@ function ConectionItem({ item }) {
         <div className="span"> {item.username}</div>
         <div className="span">{item.host}</div>
         <div className="itemButtons">
-          <button className="connect" onClick={onConnect.bind(null, item)}>
+          <button className="connect" onClick={onConnect.bind(null, item, "shortCutConnect")}>
             <ArrowIcon />
           </button>
           <button className="rm" onClick={setPromptShow.bind(null, true)}>

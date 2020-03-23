@@ -28,9 +28,9 @@ function StartConnection({ addConnect, onConnect }) {
     const reader = new FileReader();
 
     if (name === "name") setName(value);
-    if (name === "ip") setIp(value);
+    if (name === "ip") setIp(value.trim());
     if (name === "description") setDescription(value);
-    if (name === "username") setUserName(value);
+    if (name === "username") setUserName(value.trim());
     if (name === "KeyText") setKeyText(value);
     if (name === "key") setFileOrText(!fileOrText);
     if (name === "comment") setComment(value);
@@ -68,18 +68,15 @@ function StartConnection({ addConnect, onConnect }) {
 
     const connection = {
       name: connectionName,
-      host: ip.trim(),
+      host: ip,
       description: description,
-      username: username.trim(),
+      username: username,
       sshkey: privatKey,
       comment: comment
     };
 
     event.preventDefault();
-    onConnect(connection);
-    if (connectionType !== "notSave") {
-      addConnect(connection, connectionType);
-    }
+    addConnect(connection, connectionType);
     clearInput();
   }
 
@@ -197,7 +194,7 @@ function StartConnection({ addConnect, onConnect }) {
               <>
                 <div className="fileName">
                   {" "}
-                  <label for="KeyFile" className="FileKeyLabel">
+                  <label htmlFor="KeyFile" className="FileKeyLabel">
                     {" "}
                     Choose a file <FolderOpenIcon />{" "}
                   </label>{" "}
