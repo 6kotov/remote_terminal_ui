@@ -125,8 +125,8 @@ function App() {
         };
       } else {
         reqBody = {
-          action: "connect",
-          uuid: connection.uuid
+           uuid: connection.uuid,
+           action: "connect"
         };
       }
     } else if (connectionType === "remove") {
@@ -136,8 +136,8 @@ function App() {
         );
       } else {
         reqBody = {
-          action: "remove",
-          uuid: connection.uuid
+          uuid: connection.uuid,
+          action: "remove"
         };
       }
     }
@@ -158,6 +158,8 @@ let re = /ssh\/.*/g
         );
       })
       .catch(() => status("Unable to connect server!", "red", false));
+
+      if(connectionType === "saveOnServer" || connectionType === "remove" ) { getConnectionList() }
   }
 
   return (

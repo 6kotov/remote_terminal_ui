@@ -37,6 +37,7 @@ function StartConnection({ addConnect, onConnect }) {
     if (name === "useKey") setUseKey(!useKey);
     if (name === "KeyFile") {
       const file = target.files[0];
+      if (!file) { return }
       setFileName(file.name);
       if (file.size < 10000) {
         reader.readAsText(file);
@@ -54,10 +55,10 @@ function StartConnection({ addConnect, onConnect }) {
     setDescription("");
     setUserName("");
     setKeyText("");
-    setFileOrText(!fileOrText);
+    setFileOrText(false);
     setKeyFile("");
     setComment("");
-    setUseKey(!useKey);
+    setUseKey(false);
     setconnectionType("notSave");
     setFileName("...");
   }
@@ -122,6 +123,7 @@ function StartConnection({ addConnect, onConnect }) {
                 />{" "}
                 Save on server{" "}
               </label>
+{window.localStorage &&
               <label>
                 <input
                   type="radio"
@@ -131,7 +133,7 @@ function StartConnection({ addConnect, onConnect }) {
                   name="needSave"
                 />{" "}
                 Save on my computer
-              </label>
+              </label> }
             </div>
             <label>Connection name</label>
             <input
