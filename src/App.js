@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import ConnectionsList from "./components/ConnestionsList";
+import ConnectionsListClient from "./components/ConnestionsListClient";
+import ConnestionsListServer from "./components/ConnestionsListServer";
 import LoginWindow from "./components/LoginWindow";
 import StartConnection from "./components/StartConnection";
 import Loader from "./components/Loading";
 import Context from "./Context";
 import CryptoJS from "crypto-js";
+import {connect} from 'react-redux'
+import {setConnectionClient, deleteConnectionClient, addConnectioClient} from './components/redux/actions'
 require("dotenv").config();
 
-function App() {
-  const storageConnections = JSON.parse(localStorage.getItem("connections"))
-    ? JSON.parse(localStorage.getItem("connections"))
-    : [];
+function App(props) {
+ 
   const [islogged, setLogin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [connectionsClient, setConnectionClient] = useState(storageConnections);
   const [connectionsServer, setconnectionsServer] = useState([]);
   const [message, setMessage] = useState("");
   const [messageclasses, setMessageclasses] = useState([
@@ -47,9 +47,7 @@ function App() {
 
   useEffect(() => {
     const url = process.env.REACT_APP_BACKEND_URL;
-    window.addEventListener("storage", () => {
-      setConnectionClient(JSON.parse(localStorage.getItem("connections")));
-    });
+    
     status("Getting connection list...", "blue", true);
 
     fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
@@ -67,10 +65,7 @@ function App() {
       .catch(() => status("Unable to connect server!", "red", false));
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("connections", JSON.stringify(connectionsClient));
-  });
-
+  
   function addConnect(connectInfo, connectionType) {
     const newConnection = {
       name: connectInfo.name,
@@ -87,7 +82,8 @@ function App() {
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
       newConnection.pcStorage = true;
-      setConnectionClient(connectionsClient.concat([newConnection]));
+      props.addConnectioClient(newConnection)
+      // setConnectionClient(connectionsClient.concat([newConnection]));
     } else if (connectionType === "saveOnServer") {
       getConnectionList();
     }
@@ -131,9 +127,11 @@ function App() {
       }
     } else if (connectionType === "remove") {
       if (connection.pcStorage) {
-      return setConnectionClient(
-          connectionsClient.filter(item => item.uuid !== connection.uuid)
-        );
+      // return setConnectionClient(
+      //     connectionsClient.filter(item => item.uuid !== connection.uuid)
+      //   );
+        return props.deleteConnectionClient(connection.uuid)
+      
       } else {
         reqBody = {
           uuid: connection.uuid,
@@ -175,11 +173,11 @@ let re = /ssh\/.*/g
           </div>
         )}
 
-        {(connectionsClient.length !== 0 || connectionsServer.length !== 0) &&
+        {(props.connectionsClient.length !== 0 || connectionsServer.length !== 0) &&
         !loading ? (
           <>
-            <ConnectionsList connections={connectionsClient} />
-            <ConnectionsList connections={connectionsServer} />
+            <ConnectionsListClient />
+            <ConnestionsListServer />
           </>
         ) : (
           !loading && (
@@ -192,5 +190,13 @@ let re = /ssh\/.*/g
     </Context.Provider>
   );
 }
+const mapDispatchToProps = {
+  setConnectionClient, deleteConnectionClient, addConnectioClient
+}
+const mapStateToProps = state => {
+  return {
+    connectionsClient: state.connectionsClient.list
+  }
+}
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps) (App);

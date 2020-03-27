@@ -12,7 +12,12 @@
     "patternfly-react": "^2.39.15",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0"
+    "react-redux": "^7.2.0",
+    "react-scripts": "3.4.0",
+    "redux": "^4.0.5",
+    "redux-localstorage-simple": "^2.1.6",
+    "redux-state-sync": "^3.1.1",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start ",
