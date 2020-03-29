@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
-import { сlientСonnectionReducer} from './сlientСonnectionReducer'
+import { connectionReducer} from './connectionReducer'
 
 export const rootReducer = combineReducers({
-    connectionsClient: сlientСonnectionReducer
+    connections: connectionReducer
 })

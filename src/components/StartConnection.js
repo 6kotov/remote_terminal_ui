@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useContext } from "react";
+import Context from "../Context";
 import {
   ArrowIcon,
   CloseIcon,
@@ -7,7 +7,11 @@ import {
   FolderOpenIcon
 } from "@patternfly/react-icons";
 
-function StartConnection({ addConnect, onConnect }) {
+
+
+function StartConnection() {
+  const { addConnect } = useContext(Context);
+
   const [shown, setShown] = useState(false);
   const [name, setName] = useState("");
   const [ip, setIp] = useState("");
@@ -62,6 +66,8 @@ function StartConnection({ addConnect, onConnect }) {
     setconnectionType("notSave");
     setFileName("...");
   }
+
+ 
 
   function submitHandle(event) {
     const connectionName = name ? name : username + "@" + ip,
@@ -224,8 +230,7 @@ function StartConnection({ addConnect, onConnect }) {
 }
 
 StartConnection.propTypes = {
-  addConnect: PropTypes.func.isRequired,
-  onConnect: PropTypes.func.isRequired
+ 
 };
 
 export default StartConnection;

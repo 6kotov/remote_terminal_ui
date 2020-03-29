@@ -7,6 +7,10 @@ import {
   ADD_SERVER_LIST
 } from "./types";
 
+const secret = process.env.REACT_APP_SECRET,
+url = process.env.REACT_APP_BACKEND_URL,
+test_url = process.env.REACT_APP_CONNECTION_TEST_URL;
+
 export function setConnectionClient(connections) {
   return {
     type: SET_CLIENT_LIST,
@@ -14,7 +18,7 @@ export function setConnectionClient(connections) {
   };
 }
 
-export function addConnectioClient(connection) {
+export function addConnectionClient(connection) {
   return {
     type: ADD_CLIENT_LIST,
     payload: connection
@@ -28,28 +32,57 @@ export function deleteConnectionClient(uuid) {
   };
 }
 
-export async function getConnectionServer(connections) {
 
+export function setConnectionServer(connections) {
+  return {
+    type: SET_SERVER_LIST,
+    payload: connections
+  };
+}
+
+
+export function getConnectionServer(connections) {
+
+  return async dispatch => {
     const response = await fetch(url);
     const data = await response
       .json()
-      .catch(() => status("Unable to connect server!", "red", false));
-    return {
-      type: SET_CLIENT_LIST,
-      payload: connections
-    };
+      // .catch(() => status("Unable to connect server!", "red", false));
+    
+     dispatch(setConnectionServer(data.connections))
+    }
+  }
+
+  export function postConnectionServer (reqBody) {
+    return async dispatch => {
+      try {
+        const response = await  fetch(url, {
+          method: "POST",
+          body: JSON.stringify(reqBody)
+        });
+        const data = await response.json()
+
+        const re = /ssh\/.*/g
+         
+        window.open(test_url + data.connect.match(re), "_blank");
+        console.log(
+          "SSH Terminal will be connected using url: [" +
+            test_url +
+            data.connect.slice(30) +
+            "]"
+        );
+      } catch (e) {
+        console.log("Unable to connect server!", "red", false)
+      }
+     
+      }
+
   }
   
-  export function addConnectioServer(connection) {
-    return {
-      type: ADD_CLIENT_LIST,
-      payload: connection
-    };
-  }
   
-  export function deleteConnectionClient(uuid) {
+  export function deleteConnectionServer(uuid) {
     return {
-      type: DELETE_CONNECTION_CLIENT,
+      type: DELETE_CONNECTION_SERVER,
       payload: uuid
     };
   }
