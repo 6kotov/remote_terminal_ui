@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ConnectionsListClient from "./components/ConnestionsListClient";
 import ConnestionsListServer from "./components/ConnestionsListServer";
 import LoginWindow from "./components/LoginWindow";
@@ -6,55 +6,41 @@ import StartConnection from "./components/StartConnection";
 import Loader from "./components/Loading";
 import Context from "./Context";
 // import CryptoJS from "crypto-js";
-import {connect} from 'react-redux'
-import {addConnectionClient, getConnectionServer, deleteConnectionClient, postConnectionServer, setConnectionServer} from './components/redux/actions'
-import {useDispatch} from 'react-redux'
+import {
+  addConnectionClient,
+  getConnectionServer,
+  deleteConnectionClient,
+  postConnectionServer,
+  setLogged,
+  setLoading,
+  showMessage
+
+} from "./components/redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 require("dotenv").config();
 
 function App() {
-  const dispatch = useDispatch()
-  const [islogged, setLogin] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [connectionsServer, setconnectionsServer] = useState([]);
-  const [message, setMessage] = useState("");
-  const [messageclasses, setMessageclasses] = useState([
-    "message",
-    "messageBlue"
-  ]);
+  const dispatch = useDispatch();
+  const islogged = useSelector(state => state.app.is_logged);
+  const initial_logged_check = useSelector(state => state.app.init_logged_check) 
+  const loading = useSelector(state => state.app.is_loading);
+  const message  = useSelector(state => state.app.message_text);
+  const messageclasses  = useSelector(state => state.app.message_style);
 
   // const secret = process.env.REACT_APP_SECRET;
 
-  function status(text, color, timer) {
-    color === "red"
-      ? setMessageclasses(["message", "messageRed"])
-      : setMessageclasses(["message", "messageBlue"]);
-    setMessage(text);
-    if (timer) {
-      setTimeout(() => {
-        setMessage("");
-      }, 2000);
-    }
-  }
-
   useEffect(() => {
-    const url = process.env.REACT_APP_BACKEND_URL;
-    
-    status("Getting connection list...", "blue", true);
-
+    if(initial_logged_check) {return}
+  
     fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
       .then(response => response.json())
       .then(isMale => {
         if (isMale) {
-          setLogin(true);
-        }
-        setLoading(false);
+          dispatch(setLogged(true, true));
+        } else {dispatch(setLogged(false, false));}
+        dispatch(setLoading(false));
       });
-
-    fetch(url)
-      .then(response => response.json())
-      .then(data => dispatch(setConnectionServer(data.connections)))
-      .catch(() => status("Unable to connect server!", "red", false));
-  }, []);
+  });
 
 
   function addConnect(connectInfo, connectionType) {
@@ -73,20 +59,18 @@ function App() {
     if (connectionType === "saveOnPc") {
       newConnection.uuid = Date.now();
       newConnection.pcStorage = true;
-      dispatch(addConnectionClient(newConnection)) 
+      dispatch(addConnectionClient(newConnection));
     }
   }
 
   function onConnect(connection, connectionType) {
     console.log("Connecting to server...", "blue", true);
-    
+
     let reqBody = {};
 
-
     switch (connectionType) {
-
-      case "notSave" :
-      case "saveOnPc": 
+      case "notSave":
+      case "saveOnPc":
         reqBody = {
           name: connection.name,
           host: connection.host,
@@ -96,7 +80,7 @@ function App() {
         };
         break;
 
-        case "saveOnServer":
+      case "saveOnServer":
         reqBody = {
           name: connection.name,
           host: connection.host,
@@ -107,9 +91,8 @@ function App() {
           action: "connect store"
         };
         break;
-      
-        case "shortCutConnect":
-       
+
+      case "shortCutConnect":
         if (connection.pcStorage) {
           reqBody = {
             name: connection.name,
@@ -118,51 +101,53 @@ function App() {
             sshkey: connection.sshkey,
             action: "connect"
           };
-        }else {
+        } else {
           reqBody = {
-             uuid: connection.uuid,
-             action: "connect"
+            uuid: connection.uuid,
+            action: "connect"
           };
         }
         break;
-      
+
       case "remove":
         if (connection.pcStorage) {
-          return dispatch(deleteConnectionClient(connection.uuid))
+          return dispatch(deleteConnectionClient(connection.uuid));
         } else {
           reqBody = {
             uuid: connection.uuid,
             action: "remove"
           };
-
         }
-         break;
+        break;
 
-         default:  break;
-      }
-    
-      dispatch(postConnectionServer(reqBody))
+      default:
+        break;
+    }
 
-      if(connectionType === "saveOnServer" || (connectionType === "remove" && !connection.pcStorage) ) { dispatch(getConnectionServer()) }
-    
+    dispatch(postConnectionServer(reqBody));
+
+    if (
+      connectionType === "saveOnServer" ||
+      (connectionType === "remove" && !connection.pcStorage)
+    ) {
+      dispatch(getConnectionServer());
+    }
   }
-  
-  
 
   return (
-    <Context.Provider value={{addConnect, onConnect}} >
+    <Context.Provider value={{ addConnect, onConnect }}>
       <div className="wrapper">
         {loading && <Loader />}
         <div className="title"> Terminal Connections</div>
         {!islogged && !loading && <LoginWindow />}
         {!loading && (
           <div className="add-connect-buttons">
-            <StartConnection/>{" "}
-            <span className={messageclasses.join(" ")}>{message}</span>
+            <StartConnection />{" "}
+            <span className={messageclasses}>{message}</span>
           </div>
         )}
 
-        { !loading ? (
+        {!loading ? (
           <>
             <ConnectionsListClient />
             <ConnestionsListServer />
@@ -178,6 +163,5 @@ function App() {
     </Context.Provider>
   );
 }
-
 
 export default App;

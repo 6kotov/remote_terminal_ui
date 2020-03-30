@@ -2,14 +2,46 @@ import {
   DELETE_CONNECTION_CLIENT,
   SET_CLIENT_LIST,
   ADD_CLIENT_LIST,
-  DELETE_CONNECTION_SERVER,
   SET_SERVER_LIST,
-  ADD_SERVER_LIST
+  SHOW_MESSAGE,
+  SET_LOADING,
+  SET_LOGGED
 } from "./types";
 
-const secret = process.env.REACT_APP_SECRET,
-url = process.env.REACT_APP_BACKEND_URL,
-test_url = process.env.REACT_APP_CONNECTION_TEST_URL;
+const url = process.env.REACT_APP_BACKEND_URL,
+  test_url = process.env.REACT_APP_CONNECTION_TEST_URL;
+
+
+export function setLogged (isLogged, init) {
+return {
+  type: SET_LOGGED,
+  payload: {isLogged, init}
+}
+  }
+
+export function setLoading (isLoading) {
+  return {
+    type: SET_LOADING,
+    payload: isLoading
+  }
+}
+
+export function showMessage(text, style, delay) {
+  return dispatch =>{
+    dispatch({
+      type: SHOW_MESSAGE,
+      payload: {text, style, isShown: true}
+    })
+    setTimeout(() => {
+      dispatch({
+        type: SHOW_MESSAGE,
+        payload: {text:'', style:'message', isShown: false}
+      })
+    }, delay);
+
+
+  } 
+}
 
 export function setConnectionClient(connections) {
   return {
@@ -32,7 +64,6 @@ export function deleteConnectionClient(uuid) {
   };
 }
 
-
 export function setConnectionServer(connections) {
   return {
     type: SET_SERVER_LIST,
@@ -40,50 +71,39 @@ export function setConnectionServer(connections) {
   };
 }
 
-
-export function getConnectionServer(connections) {
-
+export function getConnectionServer() {
   return async dispatch => {
-    const response = await fetch(url);
-    const data = await response
-      .json()
-      // .catch(() => status("Unable to connect server!", "red", false));
-    
-     dispatch(setConnectionServer(data.connections))
+    try {
+      const response = await fetch(url);
+      const data = await response.json()
+      dispatch(setConnectionServer(data.connections));
+    } catch {
+      dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
     }
-  }
+   
+  };
+}
 
-  export function postConnectionServer (reqBody) {
-    return async dispatch => {
-      try {
-        const response = await  fetch(url, {
-          method: "POST",
-          body: JSON.stringify(reqBody)
-        });
-        const data = await response.json()
+export function postConnectionServer(reqBody) {
+  return async dispatch => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(reqBody)
+      });
+      const data = await response.json();
 
-        const re = /ssh\/.*/g
-         
-        window.open(test_url + data.connect.match(re), "_blank");
-        console.log(
-          "SSH Terminal will be connected using url: [" +
-            test_url +
-            data.connect.slice(30) +
-            "]"
-        );
-      } catch (e) {
-        console.log("Unable to connect server!", "red", false)
-      }
-     
-      }
+      const re = /ssh\/.*/g;
 
-  }
-  
-  
-  export function deleteConnectionServer(uuid) {
-    return {
-      type: DELETE_CONNECTION_SERVER,
-      payload: uuid
-    };
-  }
-  
+      window.open(test_url + data.connect.match(re), "_blank");
+      console.log(
+        "SSH Terminal will be connected using url: [" +
+          test_url +
+          data.connect.slice(30) +
+          "]"
+      );
+    } catch (e) {
+      dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
+    }
+  };
+}

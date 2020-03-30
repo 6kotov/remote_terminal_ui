@@ -3,7 +3,7 @@ import ConnectionItem from './ConnectionItem'
 import {useSelector} from 'react-redux'
 
 function ConnectionsList () {
-const connectionsClient = useSelector(state => state.connections.client_list)
+const connectionsClient = useSelector(state => state.connections_client.client_list)
     return(
         <ul className='list'>
            {connectionsClient.map((connection, index) => {
