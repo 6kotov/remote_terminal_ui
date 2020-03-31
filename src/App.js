@@ -34,7 +34,7 @@ function App() {
     if(initial_logged_check) {return}
    async function is_logged() {
       try {
-        
+        dispatch(showMessage("Login сheking", "messageBlue", 9000));
         const response = await fetch("https://swapi.co/api/people/6");
         const data = await response.json()
         if (data) { 
@@ -72,7 +72,6 @@ function App() {
   }
 
   function onConnect(connection, connectionType) {
-    dispatch(showMessage("Connecting to server...",'messageBlack', 2000))
    
     let reqBody = {};
 
@@ -148,13 +147,11 @@ function App() {
         {loading && <Loader />}
         <div className="title"> Terminal Connections</div>
         {!islogged && !loading && <LoginWindow />}
-        {!loading && (
           <div className="add-connect-buttons">
             <StartConnection />{" "}
             {messageShow && <span className={messageclasses + ' message'}>{message}</span>}
           </div>
-        )}
-
+       
         {!loading ? (
           <>
             <ConnectionsListClient />

@@ -89,6 +89,7 @@ export function getConnectionServer() {
 export function postConnectionServer(reqBody) {
   return async dispatch => {
     try {
+      dispatch(showMessage("Connecting to server...",'messageBlue', 10000))
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(reqBody)
@@ -99,11 +100,9 @@ export function postConnectionServer(reqBody) {
 
       window.open(test_url + data.connect.match(re), "_blank");
       console.log(
-        "SSH Terminal will be connected using url: [" +
-          test_url +
-          data.connect.slice(30) +
-          "]"
+        `SSH Terminal will be connected using url: [${test_url}${data.connect.slice(30)}]`
       );
+      dispatch(showMessage("Connecting to server...",'messageBlue', 300))
     } catch {
       dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
     }

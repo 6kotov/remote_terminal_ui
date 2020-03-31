@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import {useSelector} from 'react-redux'
 import Context from "../Context";
 import {
   ArrowIcon,
@@ -11,7 +12,7 @@ import {
 
 function StartConnection() {
   const { addConnect } = useContext(Context);
-
+  const loading = useSelector(state => state.app.is_loading);
   const [shown, setShown] = useState(false);
   const [name, setName] = useState("");
   const [ip, setIp] = useState("");
@@ -89,7 +90,7 @@ function StartConnection() {
 
   return (
     <div>
-      <button className="connectionAdd" onClick={() => setShown(true)}>
+      <button className="connectionAdd" onClick={() => setShown(true)} disabled={loading}>
         Connect <ArrowIcon />
       </button>
       {shown && (

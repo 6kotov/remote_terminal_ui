@@ -3,7 +3,7 @@ import { SHOW_MESSAGE,SET_LOADING , SET_LOGGED } from "./types"
 const initialState = {
     message_text: '',
     show_message:false,
-    message_style: 'messageBlack',
+    message_style: 'messageBlue',
     is_logged:false,
     init_logged_check:false,
     is_loading: true
