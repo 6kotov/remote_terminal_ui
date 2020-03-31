@@ -219,7 +219,7 @@ function StartConnection() {
               </>
             )}
 
-            <button className="loginButton connectionAdd" type="submit">
+            <button className="selfAlignCenter connectionAdd" type="submit">
               Connect <OkIcon />
             </button>
           </form>
@@ -228,9 +228,5 @@ function StartConnection() {
     </div>
   );
 }
-
-StartConnection.propTypes = {
- 
-};
 
 export default StartConnection;

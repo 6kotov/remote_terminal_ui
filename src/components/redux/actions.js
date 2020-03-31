@@ -35,7 +35,7 @@ export function showMessage(text, style, delay) {
     setTimeout(() => {
       dispatch({
         type: SHOW_MESSAGE,
-        payload: {text:'', style:'message', isShown: false}
+        payload: {text:'', style:'messageBlue', isShown: false}
       })
     }, delay);
 
@@ -74,9 +74,11 @@ export function setConnectionServer(connections) {
 export function getConnectionServer() {
   return async dispatch => {
     try {
+      dispatch(showMessage("Getting connection list...", "messageBlue", 9000));
       const response = await fetch(url);
       const data = await response.json()
       dispatch(setConnectionServer(data.connections));
+      dispatch(showMessage("Getting connection list...", "messageBlue", 1000));
     } catch {
       dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
     }
@@ -102,7 +104,7 @@ export function postConnectionServer(reqBody) {
           data.connect.slice(30) +
           "]"
       );
-    } catch (e) {
+    } catch {
       dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
     }
   };

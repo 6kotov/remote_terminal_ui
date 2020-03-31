@@ -26,20 +26,28 @@ function App() {
   const loading = useSelector(state => state.app.is_loading);
   const message  = useSelector(state => state.app.message_text);
   const messageclasses  = useSelector(state => state.app.message_style);
+  const messageShow = useSelector(state => state.app.show_message)
 
   // const secret = process.env.REACT_APP_SECRET;
 
-  useEffect(() => {
+  useEffect( () => {
     if(initial_logged_check) {return}
-  
-    fetch("https://mdn.github.io/fetch-examples/fetch-json/products.json")
-      .then(response => response.json())
-      .then(isMale => {
-        if (isMale) {
-          dispatch(setLogged(true, true));
-        } else {dispatch(setLogged(false, false));}
+   async function is_logged() {
+      try {
+        
+        const response = await fetch("https://swapi.co/api/people/6");
+        const data = await response.json()
+        if (data) { 
+          dispatch(setLogged(true, true))
+        } else{
+          dispatch(setLogged(false, false))
+        }
         dispatch(setLoading(false));
-      });
+      } catch {
+        dispatch(showMessage("Unable to connect server!",'messageRed', 2000))
+      }
+    }
+    is_logged()
   });
 
 
@@ -64,8 +72,8 @@ function App() {
   }
 
   function onConnect(connection, connectionType) {
-    console.log("Connecting to server...", "blue", true);
-
+    dispatch(showMessage("Connecting to server...",'messageBlack', 2000))
+   
     let reqBody = {};
 
     switch (connectionType) {
@@ -143,7 +151,7 @@ function App() {
         {!loading && (
           <div className="add-connect-buttons">
             <StartConnection />{" "}
-            <span className={messageclasses}>{message}</span>
+            {messageShow && <span className={messageclasses + ' message'}>{message}</span>}
           </div>
         )}
 

@@ -12,8 +12,14 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 input , textarea, button {
   font-size: 1rem;
 }
+
+button {
+  border: 2px solid #72767b;
+  border-radius: 0.3rem;
+}
+
 input:disabled, textarea:disabled {
-  box-shadow: inset 0px 0px 90px rgba(0, 0, 0, 0.100)
+  box-shadow: inset 0px 0px 90px rgba(0, 0, 0, 0.1)
 }
 input[ type=checkbox ]:disabled {
   box-shadow: none
@@ -46,7 +52,7 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
   min-height: 50vh;
   background-color: aliceblue;
   border: #c3c3c3 2px solid;
-  border-radius: 5px;
+  border-radius:0.3rem;
   filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.459));
 }
 
@@ -86,8 +92,9 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 20vh;
   padding: 2rem;
-  min-width: 25vw;
+  min-width: 18vw;
   width: fit-content;
   background: white;
   height: fit-content;
@@ -95,30 +102,37 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
 }
 
 .message {
-  color: rgb(0, 0, 0);
-  height: 2rem;
-  margin-top: 1.3rem;
-  margin-left: 1rem;
-  font-weight: bold;
-}
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    font-weight: bold;
+    width: -webkit-fill-available;
+    padding: 0.1rem 0.5rem;
+    border: 2px solid;
+    border-radius: 0.3rem;
+    text-align: center;
+  }
+
 
 .messageBlue { 
-  color: rgb(109, 109, 224);
+  color: rgb(4, 16, 124);
+  box-shadow: inset 0px 0px 25px rgba(53, 171, 250, 0.35);
+  border-color: cornflowerblue;
 }
 
 .messageRed{ 
-  color: rgb(206, 55, 55);
+  color: rgb(100, 2, 2);
+  box-shadow: inset 0px 0px 25px rgba(251, 92, 92, 0.35);
+  border-color: rgb(214, 86, 111);
 }
 
 .modal-header {
   font-weight: bold;
   font-size: 1.4rem;
   text-align: center;
-  height: 2.4rem;
   padding: 0.5rem;
   border: #72767b solid 1px;
   background-color: #73bcf7;
-  width: 40;
   margin: -2rem;
   margin-top: -3.5rem;
   margin-bottom: 1rem;
@@ -136,16 +150,21 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
   font-weight: bold;
   margin-top: 1rem;
   width: 6rem;
-  align-self: center;
 }
 
 .margin {
   margin-left: 4rem;
 }
 
+.selfAlignCenter {
+   align-self: center;
+ }
+
 .login {
   align-self: center;
   align-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .item {
@@ -157,7 +176,7 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
   padding-bottom: 0.7rem;
   margin: 0.2rem;
   border: #72767b solid 2px;
-  border-radius: 3px;
+  border-radius: 0.3rem;
 }
 .span {
   width: 40%;
@@ -229,7 +248,7 @@ input[name="KeyFile"] ,textarea[name="KeyText"]:disabled {
     font-size: 1.8rem;
     background-color: #73bcf7;
     text-align: center;
-    border-radius: 3px;
+    border-radius:0.3rem;
 }
 
 .button_group {
