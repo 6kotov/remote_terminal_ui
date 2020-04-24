@@ -6,7 +6,6 @@ import StartConnection from "./components/StartConnection";
 import Loader from "./components/Loading";
 import Context from "./Context";
 // import CryptoJS from "crypto-js";
-
 import {
   addConnectionClient,
   getConnectionServer,
@@ -18,8 +17,6 @@ import {
 } from "./components/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 require("dotenv").config();
-const url = process.env.REACT_APP_BACKEND_URL,
-  test_url = process.env.REACT_APP_CONNECTION_TEST_URL;
 
 function App() {
   const dispatch = useDispatch();
@@ -78,7 +75,7 @@ function App() {
     }
   }
 
-  async function onConnect(connection, connectionType) {
+  function onConnect(connection, connectionType) {
     let reqBody = {};
 
     switch (connectionType) {
@@ -137,26 +134,7 @@ function App() {
         break;
     }
 
-    try {
-      dispatch(showMessage("Connecting to server...", "messageBlue", 10000));
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-      });
-      const data = await response.json();
-      const re = /ssh\/.*/g;
-
-      const linkToTerminal = test_url + data.connect.match(re);
-      window.open(linkToTerminal);
-      console.log(
-        `SSH Terminal will be connected using url: [${linkToTerminal}]`
-      );
-      dispatch(showMessage("Connecting to server...", "messageBlue", 300));
-    } catch {
-      dispatch(showMessage("Unable to connect server!", "messageRed", 2000));
-    }
-
-    // dispatch(postConnectionServer(reqBody));
+    dispatch(postConnectionServer(reqBody));
 
     if (
       connectionType === "saveOnServer" ||
