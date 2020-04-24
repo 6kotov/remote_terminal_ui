@@ -1,18 +1,16 @@
 import React, { useState, useContext } from "react";
-import {useSelector} from 'react-redux'
+import { useSelector } from "react-redux";
 import Context from "../Context";
 import {
   ArrowIcon,
   CloseIcon,
   OkIcon,
-  FolderOpenIcon
+  FolderOpenIcon,
 } from "@patternfly/react-icons";
-
-
 
 function StartConnection() {
   const { addConnect } = useContext(Context);
-  const loading = useSelector(state => state.app.is_loading);
+  const loading = useSelector((state) => state.app.is_loading);
   const [shown, setShown] = useState(false);
   const [name, setName] = useState("");
   const [ip, setIp] = useState("");
@@ -42,11 +40,13 @@ function StartConnection() {
     if (name === "useKey") setUseKey(!useKey);
     if (name === "KeyFile") {
       const file = target.files[0];
-      if (!file) { return }
+      if (!file) {
+        return;
+      }
       setFileName(file.name);
       if (file.size < 10000) {
         reader.readAsText(file);
-        reader.onload = function() {
+        reader.onload = function () {
           setKeyFile(reader.result);
         };
       }
@@ -68,8 +68,6 @@ function StartConnection() {
     setFileName("...");
   }
 
- 
-
   function submitHandle(event) {
     const connectionName = name ? name : username + "@" + ip,
       privatKey = !fileOrText ? KeyText : KeyFile;
@@ -80,7 +78,7 @@ function StartConnection() {
       description: description,
       username: username,
       sshkey: privatKey,
-      comment: comment
+      comment: comment,
     };
 
     event.preventDefault();
@@ -90,7 +88,11 @@ function StartConnection() {
 
   return (
     <div>
-      <button className="connectionAdd" onClick={() => setShown(true)} disabled={loading}>
+      <button
+        className="connectionAdd"
+        onClick={() => setShown(true)}
+        disabled={loading}
+      >
         Connect <ArrowIcon />
       </button>
       {shown && (
@@ -130,17 +132,18 @@ function StartConnection() {
                 />{" "}
                 Save on server{" "}
               </label>
-{window.localStorage &&
-              <label>
-                <input
-                  type="radio"
-                  value={connectionType}
-                  onChange={setconnectionType.bind(null, "saveOnPc")}
-                  checked={connectionType === "saveOnPc"}
-                  name="needSave"
-                />{" "}
-                Save on my computer
-              </label> }
+              {window.localStorage && (
+                <label>
+                  <input
+                    type="radio"
+                    value={connectionType}
+                    onChange={setconnectionType.bind(null, "saveOnPc")}
+                    checked={connectionType === "saveOnPc"}
+                    name="needSave"
+                  />{" "}
+                  Save on my computer
+                </label>
+              )}
             </div>
             <label>Connection name</label>
             <input
@@ -190,7 +193,7 @@ function StartConnection() {
               </label>
             </div>
 
-            {(!fileOrText && useKey) && (
+            {!fileOrText && useKey && (
               <textarea
                 name="KeyText"
                 rows="3"
@@ -199,7 +202,7 @@ function StartConnection() {
               />
             )}
 
-            {(fileOrText && useKey) && (
+            {fileOrText && useKey && (
               <>
                 <div className="fileName">
                   {" "}
