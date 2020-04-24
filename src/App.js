@@ -137,9 +137,6 @@ function App() {
         break;
     }
 
-    const windowOpen = (url) => {
-      window.open(url, "_blank");
-    };
     try {
       dispatch(showMessage("Connecting to server...", "messageBlue", 10000));
       const response = await fetch(url, {
@@ -147,14 +144,12 @@ function App() {
         body: JSON.stringify(reqBody),
       });
       const data = await response.json();
-
       const re = /ssh\/.*/g;
-      windowOpen(test_url + data.connect.match(re));
-      // window.open(test_url + data.connect.match(re), "_blank");
+
+      const linkToTerminal = test_url + data.connect.match(re);
+      window.open(linkToTerminal);
       console.log(
-        `SSH Terminal will be connected using url: [${test_url}${data.connect.match(
-          re
-        )}]`
+        `SSH Terminal will be connected using url: [${linkToTerminal}]`
       );
       dispatch(showMessage("Connecting to server...", "messageBlue", 300));
     } catch {
