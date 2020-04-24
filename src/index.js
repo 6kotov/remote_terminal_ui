@@ -36,10 +36,10 @@ const store = createStore(
       thunk,
       save({ states: ["connections_client.client_list"] }),
       ...tabSync
-    ),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
   )
 );
+
 initStateWithPrevTab(store);
 
 ReactDOM.render(
