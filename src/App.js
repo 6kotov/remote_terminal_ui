@@ -10,11 +10,13 @@ import {
   addConnectionClient,
   getConnectionServer,
   deleteConnectionClient,
-  postConnectionServer,
   setLogged,
   setLoading,
   showMessage,
+  setTerminalLink,
+  postConnectionServer,
 } from "./components/redux/actions";
+import { InfoIcon } from "@patternfly/react-icons";
 import { useDispatch, useSelector } from "react-redux";
 require("dotenv").config();
 
@@ -28,6 +30,7 @@ function App() {
   const message = useSelector((state) => state.app.message_text);
   const messageclasses = useSelector((state) => state.app.message_style);
   const messageShow = useSelector((state) => state.app.show_message);
+  const link = useSelector((state) => state.app.terminalLink);
 
   // const secret = process.env.REACT_APP_SECRET;
 
@@ -37,7 +40,7 @@ function App() {
     }
     async function is_logged() {
       try {
-        dispatch(showMessage("Login сheking", "messageBlue", 9000));
+        dispatch(showMessage("Login сheking", "messageBlue", false));
         const response = await fetch(
           "https://jsonplaceholder.typicode.com/users"
         );
@@ -47,6 +50,7 @@ function App() {
         } else {
           dispatch(setLogged(false, false));
         }
+        dispatch(showMessage("Login сheking", "messageBlue", 1000));
         dispatch(setLoading(false));
       } catch {
         dispatch(showMessage("Unable to connect server!", "messageRed", 2000));
@@ -147,6 +151,39 @@ function App() {
   return (
     <Context.Provider value={{ addConnect, onConnect }}>
       <div className="wrapper">
+        {link && (
+          <>
+            <div
+              className="overlay"
+              onClick={() => dispatch(setTerminalLink(false))}
+            ></div>
+            <div className="prompt">
+              <div className="block_info">
+                <InfoIcon className="infoIcon" />
+              </div>
+              <div className="prompt_block">
+                If the terminal did not open, click "Open".
+                <span>
+                  <button
+                    className="yes"
+                    onClick={() => {
+                      window.open(link, "_blank");
+                      dispatch(setTerminalLink(false));
+                    }}
+                  >
+                    Open
+                  </button>
+                  <button
+                    className="no"
+                    onClick={() => dispatch(setTerminalLink(false))}
+                  >
+                    ok
+                  </button>
+                </span>
+              </div>
+            </div>
+          </>
+        )}
         {loading && <Loader />}
         <div className="title"> Terminal Connections</div>
         {!islogged && !loading && <LoginWindow />}
