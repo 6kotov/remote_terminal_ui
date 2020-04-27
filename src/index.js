@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { createStore, compose, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import { rootReducer } from "./components/redux/rootReducer";
+import rootReducer from "./components/redux/rootReducer";
 import * as serviceWorker from "./serviceWorker";
 import thunk from "redux-thunk";
 import { save, load } from "redux-localstorage-simple";
@@ -30,7 +30,7 @@ const config = {
 const tabSync = [createStateSyncMiddleware(config)];
 const store = createStore(
   rootReducer,
-  load({ states: ["connections_client.client_list"] }),
+  load({ states: ["connections_client.client_list"], disableWarnings: true }),
   compose(
     applyMiddleware(
       thunk,
