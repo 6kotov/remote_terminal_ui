@@ -15,6 +15,7 @@ import {
   showMessage,
   setTerminalLink,
   postConnectionServer,
+  swich_popup_open_check,
 } from "./components/redux/actions";
 import { InfoIcon } from "@patternfly/react-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +32,7 @@ function App() {
   const messageclasses = useSelector((state) => state.app.message_style);
   const messageShow = useSelector((state) => state.app.show_message);
   const link = useSelector((state) => state.app.terminalLink);
+  const PopupOpenCheck = useSelector((state) => state.app.PopupOpenCheck);
 
   // const secret = process.env.REACT_APP_SECRET;
 
@@ -151,7 +153,7 @@ function App() {
   return (
     <Context.Provider value={{ addConnect, onConnect }}>
       <div className="wrapper">
-        {link && (
+        {link && PopupOpenCheck && (
           <>
             <div
               className="overlay"
@@ -186,12 +188,25 @@ function App() {
         )}
         {loading && <Loader />}
         <div className="title"> Terminal Connections</div>
+        <div className="messageWrapper">
+          {messageShow && (
+            <div className={messageclasses + " message"}>{message}</div>
+          )}
+        </div>
         {!islogged && !loading && <LoginWindow />}
         <div className="add-connect-buttons">
           <StartConnection />{" "}
-          {messageShow && (
-            <span className={messageclasses + " message"}>{message}</span>
-          )}
+          <div className="popUpCheck">
+            Popup open check {"  "}
+            <label className="switch">
+              <input
+                type="checkbox"
+                onChange={() => dispatch(swich_popup_open_check())}
+                value={PopupOpenCheck}
+              />
+              <span className="slider round"></span>
+            </label>
+          </div>
         </div>
 
         {!loading ? (

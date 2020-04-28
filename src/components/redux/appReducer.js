@@ -3,6 +3,7 @@ import {
   SET_LOADING,
   SET_LOGGED,
   SET_TERMINAL_LINK,
+  POPUP_OPEN_CHECK_SWICH,
 } from "./types";
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   init_logged_check: false,
   is_loading: true,
   terminalLink: false,
+  PopupOpenCheck: false,
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -34,6 +36,8 @@ export const appReducer = (state = initialState, action) => {
       };
     case SET_TERMINAL_LINK:
       return { ...state, terminalLink: action.payload };
+    case POPUP_OPEN_CHECK_SWICH:
+      return { ...state, PopupOpenCheck: !state.PopupOpenCheck };
     default:
       return state;
   }

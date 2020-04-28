@@ -7,6 +7,7 @@ import {
   SET_LOADING,
   SET_LOGGED,
   SET_TERMINAL_LINK,
+  POPUP_OPEN_CHECK_SWICH,
 } from "./types";
 
 const url = process.env.REACT_APP_BACKEND_URL,
@@ -80,6 +81,12 @@ export function setConnectionServer(connections) {
   return {
     type: SET_SERVER_LIST,
     payload: connections,
+  };
+}
+
+export function swich_popup_open_check() {
+  return {
+    type: POPUP_OPEN_CHECK_SWICH,
   };
 }
 
