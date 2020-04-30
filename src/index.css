@@ -211,7 +211,9 @@ textarea[name="KeyText"]:disabled {
 .overlay {
   opacity: 1;
   visibility: visible;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -224,8 +226,6 @@ textarea[name="KeyText"]:disabled {
 
 .prompt {
   position: absolute;
-  top: 40%;
-  left: 20%;
   display: flex;
   font-size: 1.2rem;
   flex-direction: row;
@@ -242,6 +242,8 @@ textarea[name="KeyText"]:disabled {
   flex-direction: column;
   padding: 5%;
   align-self: center;
+  align-items: center;
+  justify-content: center;
 }
 .block_alert {
   width: 3rem;

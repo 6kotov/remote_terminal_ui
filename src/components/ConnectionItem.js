@@ -20,30 +20,28 @@ function ConectionItem({ item }) {
     <>
       {promptShow && (
         <>
-          <div
-            className="overlay"
-            onClick={setPromptShow.bind(null, false)}
-          ></div>
-          <div className="prompt">
-            <div className="block_alert">
-              <WarningTriangleIcon className="WarningIcon" />
-            </div>
-            <div className="prompt_block">
-              Delete connection?
-              <span>
-                <button
-                  className="yes"
-                  onClick={deleteConnection.bind(null, item)}
-                >
-                  Yes
-                </button>
-                <button
-                  className="no"
-                  onClick={setPromptShow.bind(null, false)}
-                >
-                  No
-                </button>
-              </span>
+          <div className="overlay" onClick={setPromptShow.bind(null, false)}>
+            <div className="prompt">
+              <div className="block_alert">
+                <WarningTriangleIcon className="WarningIcon" />
+              </div>
+              <div className="prompt_block">
+                Delete connection?
+                <span>
+                  <button
+                    className="yes"
+                    onClick={deleteConnection.bind(null, item)}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    className="no"
+                    onClick={setPromptShow.bind(null, false)}
+                  >
+                    No
+                  </button>
+                </span>
+              </div>
             </div>
           </div>
         </>

@@ -158,30 +158,31 @@ function App() {
             <div
               className="overlay"
               onClick={() => dispatch(setTerminalLink(false))}
-            ></div>
-            <div className="prompt">
-              <div className="block_info">
-                <InfoIcon className="infoIcon" />
-              </div>
-              <div className="prompt_block">
-                If the terminal did not open, click "Open".
-                <span>
-                  <button
-                    className="yes"
-                    onClick={() => {
-                      window.open(link, "_blank");
-                      dispatch(setTerminalLink(false));
-                    }}
-                  >
-                    Open
-                  </button>
-                  <button
-                    className="no"
-                    onClick={() => dispatch(setTerminalLink(false))}
-                  >
-                    ok
-                  </button>
-                </span>
+            >
+              <div className="prompt">
+                <div className="block_info">
+                  <InfoIcon className="infoIcon" />
+                </div>
+                <div className="prompt_block">
+                  If the terminal did not open, click "Open".
+                  <span>
+                    <button
+                      className="yes"
+                      onClick={() => {
+                        window.open(link, "_blank");
+                        dispatch(setTerminalLink(false));
+                      }}
+                    >
+                      Open
+                    </button>
+                    <button
+                      className="no"
+                      onClick={() => dispatch(setTerminalLink(false))}
+                    >
+                      ok
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
           </>
